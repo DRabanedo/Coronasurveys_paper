@@ -109,6 +109,66 @@ gen_SIRpop = function(n, net ,beta, gamma, chosen_nodes, n_iter){
   return(population_buc) 
 }
 
+
+gen_SIRpop_fix = function(n, net ,beta, gamma, chosen_nodes, n_hp){
+  # SIR method to determine the distribution of the hidden population
+  
+  # n: number of individuals in the population
+  # beta: infection rate
+  # gamma: removal rate
+  # n_iter: number of infected people
+  # chosen_nodes: nodes from which we start the infection
+  
+  # Loop variables
+  infected_nodes = c()        # Infected nodes
+  infected_recovered = c()    # Nodes recovered from the infection
+  
+  infected_nodes = c(infected_nodes,chosen_nodes)
+  while (length(infected_nodes) < n_hp) {
+    
+    #Infection stage
+    for (node in infected_nodes) {
+      for (neighbor in net[[node]][[1]]){
+        if (runif(1) < beta & !(neighbor %in% infected_nodes) & !(neighbor %in% infected_recovered )) {
+          infected_nodes = c(infected_nodes,neighbor)
+          #print(infected_nodes)
+        }
+      }
+    }
+    
+    # Removal stage
+    infected_survivors = c()
+    for (node in infected_nodes) {
+      if (runif(1) < gamma){
+        infected_recovered = c(infected_recovered,node)
+      }
+      else{
+        infected_survivors = c(infected_survivors,node)
+      }
+    }
+    infected_nodes = infected_survivors
+  }
+  
+  # Final nodes
+  final_infected_nodes = sample(infected_nodes, n_hp)
+  
+  # 0 & 1 vector conversion
+  hp_vector = rep(NA, n)
+  
+  for (i in 1:n){
+    if (as.logical(sum(i %in% final_infected_nodes))){
+      hp_vector[i] = 1
+    }
+    else{
+      hp_vector[i] = 0
+    }
+  }
+  
+  # Dataframe output
+  population_buc = data.frame(hidden_population = hp_vector)
+  
+  return(population_buc) 
+}
 ######################################
 ## Reach & Hidden population number ##
 
