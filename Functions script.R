@@ -745,6 +745,45 @@ getNh_basicvis_mean = function(survey,N,vis) {
   return(Nh_f)
 }
 
+######################
+# Modified estimator #
+######################
+
+getNh_Mod = function(enc, v_pob, N){
+  #NSUM Mean of Sums(MoS) (Formula from "Thirty Years of the NSUM method")
+  #enc: survey
+  #v_pob: vector with the number of people in each Subpopulation
+  #N: population's size
+  
+  # \hat{d_i} = N/L \sum_k (y_{ik}/N_k)
+  
+  d_i_est = rep(NA, nrow(enc))
+  for (i in 1:nrow(enc)) {
+    d_i_est[i] = (sum( dplyr::select(enc, starts_with("kp_reach_"))[i,] /v_pob))/length(v_pob) * N
+  }
+  
+  Nh_f = N * sum(enc$hp_survey) / sum(d_i_est)
+  Nh_f
+}
+
+getNh_Modvis = function(enc, v_pob, N, vis){
+  #NSUM Mean of Sums(MoS) (Formula from "Thirty Years of the NSUM method")
+  #enc: survey
+  #v_pob: vector with the number of people in each Subpopulation
+  #N: population's size
+  
+  # \hat{d_i} = N/L \sum_k (y_{ik}/N_k)
+  
+  d_i_est = rep(NA, nrow(enc))
+  for (i in 1:nrow(enc)) {
+    d_i_est[i] = (sum( dplyr::select(enc, starts_with("kp_reach_"))[i,] /v_pob))/length(v_pob) * N
+  }
+  
+  Nh_f = N * sum(enc$hp_survey) / sum(d_i_est) * (1/vis)
+  Nh_f
+}
+
+
 
 #################
 # MLE estimator #

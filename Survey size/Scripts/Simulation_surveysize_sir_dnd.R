@@ -281,27 +281,39 @@ for (l in 1:b) {
   
 }
 
-################################################################################
-write.csv(simulaciones,                       # Data frame
-          file = "Simulation_surveysize_notdisjoint.csv",     # Csv name
-          row.names = TRUE )                  # Rownames TRUE o FALSE
-################################################################################
+
+
 
 ################################################################################
-write.csv(simulaciones_disjoint,                       # Data frame
-          file = "Simulation_surveysize_disjoint.csv",     # Csv name
-          row.names = TRUE )                  # Rownames TRUE o FALSE
+file_name = str_c("Simulation_surveysize_notdisjoint", seed,".csv")
+write.csv(simulaciones,                      # Data frame
+          file = file_name,                  # CSV name
+          row.names = FALSE )                 # row names: TRUE or FALSE 
+
 ################################################################################
 
+
+################################################################################
+file_name_disjoint = str_c("Simulation_surveysize_disjoint", seed,".csv")
+write.csv(simulaciones_disjoint,              # Data frame
+          file = file_name_disjoint,          # CSV name
+          row.names = FALSE )                  # row names: TRUE or FALSE 
+
+################################################################################
 
 timer = Sys.time() - t
 timer
 
+####################### Network analysis #######################################
+###### Links to the hidden population distribution & Degree distribution #######
+plot_name = str_c("Network_surveysize_", seed, ".png")
+
+png(filename = plot_name,
+    width = 1000, height = 1000)
+net_analysis(net_sw, Population, p, 2*nei)
+dev.off()
+
 #################### COMPUTATION TIME ANALYSIS ###########################
-
-# Computation time (N=10000) (my PC)
-#timer ->  9.369394 mins
-
-# Computation time (N=10000) (1-1000 // 400)
-# timer -> 4.234875 hours
+# Computation time (N=10000) (virtual machine)
+#timer ->  1.112204 hours
 ###########################################################################

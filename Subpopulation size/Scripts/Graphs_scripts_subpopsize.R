@@ -11,11 +11,12 @@ library(stringr)
 
 ######################
 # Data import
+setwd("C:/Users/David Rabanedo/Documents/GitHub/Coronasurveys_paper/Subpopulation size/Graphs")
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation size/CSV/Simulations_subpopulationsize_notdisjoint_2023.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation size/CSV/Simulations_subpopulationsize_disjoint_2023.csv")
+simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_notdisjoint_207.csv")
+simulation_data_disjoint =read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_disjoint_207.csv")
 getwd()
-seed_number = 2023
+seed_number = 207
 
 
 ################################################################################
