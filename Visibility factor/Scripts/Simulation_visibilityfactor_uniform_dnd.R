@@ -282,11 +282,11 @@ for (w in 1:length(parameters)) {
     Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)    
     
     #Nh_TEO_disjoint    = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
-    Nh_TEOvis_disjoint    = getNh_TEO(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    Nh_TEOvis_disjoint    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
     
     
     #Nh_Zheng_disjoint  = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
-    Nh_Zhengvis_disjoint  = getNh_Zheng(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins =1000)
+    Nh_Zhengvis_disjoint  = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins =1000)
     
     
     #Dataframe for saving the estimates
