@@ -23,7 +23,7 @@ set.seed(seed)
 
 #Graph
 dim = 1      # Graph dimension 
-nei = 18     # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
+nei = 50     # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
              # before applying the randomization.
 p   = 0.1    # Probability of randomize a connection. It is applied to all connections
 
@@ -117,6 +117,9 @@ for (w in 1:length(parameters)) {
   
   #Nh_GNSUM = rep(NA,b) 
   
+  #Nh_MLE_mod     = rep(NA,b) 
+  #Nh_MLE_modvis = rep(NA,b)
+  
   #Nh_Teo = getNh_Teo(survey,knowpopulation_data,NITERATION)
   #Nh_overdispersed = getNh_overdispersed(survey, v_pop_total,N, warmup,iterations,chains=1)
   
@@ -150,6 +153,9 @@ for (w in 1:length(parameters)) {
     
     #Nh_MLE     = getNh_MLE(survey, v_pop_total)
     #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_estimate)
+    
+    #Nh_MLE_mod  = getNh_MLE_mod(survey, v_pop_total, N)
+    #Nh_Mod_modvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
     #Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
@@ -188,6 +194,12 @@ for (w in 1:length(parameters)) {
     
     #sim = cbind(sim,Nh_MLEvis = Nh_MLEvis)
     #names(sim)[dim(sim)[2]]   = str_c("Nh_MLEvis_",l)
+    
+    #sim = cbind(sim,Nh_MLE_mod = Nh_MLE_mod)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_mod_",l)
+    
+    #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
     #sim = cbind(sim,Nh_MoS  = Nh_MoS)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MoS_",l)

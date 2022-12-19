@@ -28,7 +28,7 @@ set.seed(seed)
 
 #Graph
 dim = 1    # Graph dimension 
-nei = 18   # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
+nei = 50   # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
 # before applying the randomization.
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
@@ -145,6 +145,12 @@ for (w in 1:length(parameters)) {
   
   Nh_GNSUM = rep(NA,b) 
   
+  Nh_TEO    = rep(NA, b)
+  Nh_Zheng  = rep(NA, b)
+  
+  Nh_MLE_mod     = rep(NA,b) 
+  #Nh_MLE_modvis = rep(NA,b)
+  
   lista_sim = list()
   
   # Population for the VF estimate
@@ -179,6 +185,12 @@ for (w in 1:length(parameters)) {
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_subpop)
     
     Nh_GNSUM    =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
+    
+    Nh_MLE_mod  = getNh_MLE_mod(survey, v_pop_total, N)
+    #Nh_MLE_modvis  = getNh_MLE_modvis(survey, v_pop_total, N, vf_estimate)
+    
+    Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
     
     
     #Dataframe for saving the estimates
@@ -218,6 +230,18 @@ for (w in 1:length(parameters)) {
     sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
     names(sim)[dim(sim)[2]] = str_c("Nh_GNSUM_",l)
     
+    sim = cbind(sim,Nh_MLE_mod = Nh_MLE_mod)
+    names(sim)[dim(sim)[2]] = str_c("Nh_MLE_mod_",l)
+    
+    #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
+    
+    sim = cbind(sim, Nh_TEO = Nh_TEO)
+    names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
+    
+    sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    
     lista_sim[[l]] = sim
   }
   simulacion = bind_cols(lista_sim)
@@ -244,7 +268,13 @@ for (w in 1:length(parameters)) {
   Nh_MoS_disjoint = rep(NA,b) 
   #Nh_MoSvis_disjoint = rep(NA,b) 
   
-  Nh_GNSUM_disjoint = rep(NA,b) 
+  Nh_GNSUM_disjoint = rep(NA,b)
+  
+  Nh_TEO_disjoint    = rep(NA, b)
+  Nh_Zheng_disjoint  = rep(NA, b)
+  
+  Nh_MLE_mod_disjoint     = rep(NA,b) 
+  #Nh_MLE_modvis_disjoint = rep(NA,b) 
   
   lista_sim_disjoint = list()
   
@@ -281,7 +311,14 @@ for (w in 1:length(parameters)) {
     Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
     #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_subpop)
     
-    Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)    
+    Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)   
+    
+    Nh_TEO_disjoint    = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    Nh_Zheng_disjoint  = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    
+    Nh_MLE_mod_disjoint      = getNh_MLE_mod(survey, v_pop_total_disjoint, N)
+    #Nh_MLE_modvis_disjoint  = getNh_MLE_modvis(survey, v_pop_total_disjoint, N, vf_estimate)
+    
     
     #Dataframe for saving the estimates
     sim_disjoint = data.frame(Nh_real = Nh_real_disjoint)
@@ -319,6 +356,18 @@ for (w in 1:length(parameters)) {
     
     sim_disjoint = cbind(sim_disjoint, Nh_GNSUM = Nh_GNSUM_disjoint)
     names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
+    
+    sim_disjoint = cbind(sim_disjoint,Nh_MLE_mod = Nh_MLE_mod_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_mod_",l)
+    
+    #sim_disjoint = cbind(sim_disjoint,Nh_MLE_modvis = Nh_MLE_modvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_modvis_",l)
+    
+    sim_disjoint = cbind(sim_disjoint, Nh_TEO = Nh_TEO_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEO_",l)
+    
+    sim_disjoint = cbind(sim_disjoint, Nh_Zheng = Nh_Zheng_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zheng_",l)
     
     lista_sim_disjoint[[l]] = sim_disjoint
   }

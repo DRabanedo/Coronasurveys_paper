@@ -113,6 +113,9 @@ for (w in 1:length(parameters)) {
   #Nh_MLE    = rep(NA,b) 
   #Nh_MLEvis = rep(NA,b) 
   
+  #Nh_MLE_mod     = rep(NA,b) 
+  #Nh_MLE_modvis = rep(NA,b)
+  
   #Nh_MoS    = rep(NA,b) 
   #Nh_MoSvis = rep(NA,b) 
   
@@ -152,6 +155,9 @@ for (w in 1:length(parameters)) {
     #Nh_MLE     = getNh_MLE(survey, v_pop_total)
     #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_estimate)
     
+    #Nh_MLE_mod  = getNh_MLE_mod(survey, v_pop_total, N)
+    #Nh_Mod_modvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
+    
     #Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
@@ -189,6 +195,12 @@ for (w in 1:length(parameters)) {
     
     #sim = cbind(sim,Nh_MLEvis = Nh_MLEvis)
     #names(sim)[dim(sim)[2]]   = str_c("Nh_MLEvis_",l)
+    
+    #sim = cbind(sim,Nh_MLE_mod = Nh_MLE_mod)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_mod_",l)
+    
+    #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
     #sim = cbind(sim,Nh_MoS  = Nh_MoS)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MoS_",l)

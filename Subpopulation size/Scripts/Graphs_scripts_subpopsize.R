@@ -13,8 +13,8 @@ library(stringr)
 # Data import
 setwd("C:/Users/David Rabanedo/Documents/GitHub/Coronasurveys_paper/Subpopulation size/Graphs")
 
-simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_notdisjoint_207.csv")
-simulation_data_disjoint =read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_disjoint_207.csv")
+simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_notdisjoint_par1_207.csv")
+simulation_data_disjoint =read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_disjoint_par1_207.csv")
 getwd()
 seed_number = 207
 
@@ -35,6 +35,9 @@ Nh_MLE_dataframe     = select(simulation_data, starts_with("Nh_MLE_"))
 Nh_MoS_dataframe     = select(simulation_data, starts_with("Nh_MoS_"))
 #Nh_MoSvis_dataframe  = select(simulation_data, starts_with("Nh_MoSvis_"))
 
+Nh_Mod_dataframe     = select(simulation_data, starts_with("Nh_Mod_"))
+#Nh_Modvis_dataframe  = select(simulation_data, starts_with("Nh_Modvis_"))
+
 Nh_GNSUM_dataframe   = select(simulation_data, starts_with("Nh_GNSUM"))
 
 
@@ -52,6 +55,9 @@ Nh_MLE_analysis     = data_analysis(Nh_MLE_dataframe, Nh_real_dataframe)
 
 Nh_MoS_analysis     = data_analysis(Nh_MoS_dataframe, Nh_real_dataframe)
 #Nh_MoSvis_analysis = data_analysis(Nh_MoSvis_dataframe, Nh_real_dataframe)
+
+Nh_Mod_analysis     = data_analysis(Nh_Mod_dataframe, Nh_real_dataframe)
+#Nh_Modvis_analysis = data_analysis(Nh_Modvis_dataframe, Nh_real_dataframe)
 
 Nh_GNSUM_analysis  = data_analysis(Nh_GNSUM_dataframe, Nh_real_dataframe)
 
@@ -71,6 +77,9 @@ Nh_MLE_dataframe_disjoint     = select(simulation_data_disjoint, starts_with("Nh
 
 Nh_MoS_dataframe_disjoint     = select(simulation_data_disjoint, starts_with("Nh_MoS_"))
 #Nh_MoSvis_dataframe_disjoint  = select(simulation_data_disjoint, starts_with("Nh_MoSvis_"))
+
+Nh_Mod_dataframe_disjoint     = select(simulation_data_disjoint, starts_with("Nh_Mod_"))
+#Nh_Modvis_dataframe_disjoint  = select(simulation_data_disjoint, starts_with("Nh_Modvis_"))
 
 Nh_GNSUM_dataframe_disjoint  = select(simulation_data_disjoint, starts_with("Nh_GNSUM"))
 
@@ -407,6 +416,9 @@ graph_data_bias = cbind(graph_data_bias, Nh_MLE =  Nh_MLE_analysis$bias)
 graph_data_bias = cbind(graph_data_bias, Nh_MoS =  Nh_MoS_analysis$bias)
 #graph_data_bias = cbind(graph_data_bias, Nh_MoSvis =  Nh_MoSvis_analysis$bias)
 
+graph_data_bias = cbind(graph_data_bias, Nh_Mod =  Nh_Mod_analysis$bias)
+#graph_data_bias = cbind(graph_data_bias, Nh_Modvis =  Nh_Modvis_analysis$bias)
+
 graph_data_bias = cbind(graph_data_bias, Nh_GNSUM  =  Nh_GNSUM_analysis$bias)
 
 
@@ -428,7 +440,10 @@ ggplot(graph_data_bias) +
   #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
   geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) +
+  
+  geom_point(aes(x = data, y =  Nh_Mod, col = "Nh_Mod")) + 
+  #geom_point(aes(x = data, y =  Nh_Modvis, col = "Nh_Modvis")) +
   
   geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
@@ -557,6 +572,9 @@ graph_data_sd = cbind(graph_data_sd, Nh_MLE =  Nh_MLE_analysis$sd)
 graph_data_sd = cbind(graph_data_sd, Nh_MoS =  Nh_MoS_analysis$sd)
 #graph_data_sd = cbind(graph_data_sd, Nh_MoSvis =  Nh_MoSvis_analysis$sd)
 
+graph_data_sd = cbind(graph_data_sd, Nh_Mod =  Nh_Mod_analysis$sd)
+#graph_data_sd = cbind(graph_data_sd, Nh_Modvis =  Nh_Modvis_analysis$sd)
+
 graph_data_sd = cbind(graph_data_sd, Nh_GNSUM  =  Nh_GNSUM_analysis$sd)
 
 
@@ -577,7 +595,10 @@ ggplot(graph_data_sd) +
   #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
   geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) +
+  
+  geom_point(aes(x = data, y =  Nh_Mod, col = "Nh_Mod")) + 
+  #geom_point(aes(x = data, y =  Nh_Modvis, col = "Nh_Modvis")) +
   
   geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   

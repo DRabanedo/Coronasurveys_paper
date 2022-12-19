@@ -22,7 +22,7 @@ set.seed(seed)
 
 #Graph
 dim = 1    # Graph dimension 
-nei = 18   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
+nei = 50   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
 # before applying the randomization.
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
@@ -94,6 +94,12 @@ for (l in 1:b) {
   
   Nh_GNSUM = rep(NA,length(parameters))  
   
+  Nh_TEO    = rep(NA,length(parameters))
+  Nh_Zheng  =rep(NA,length(parameters))
+  
+  Nh_MLE_mod     = rep(NA,length(parameters))
+  #Nh_MLE_modvis = rep(NA,length(parameters))
+  
   Nh_Direct = rep(NA,length(parameters))
   
   
@@ -102,25 +108,29 @@ for (l in 1:b) {
   
   ## Variable reset ##
   
-  Nh_real_disjoint =  rep(NA,b) 
+  Nh_real_disjoint =  rep(NA,length(parameters))
   
-  Nh_basic_sum_disjoint = rep(NA,b) 
-  #Nh_basicvis_sum_disjoint = rep(NA,b) 
-  Nh_basic_mean_disjoint = rep(NA,b) 
-  #Nh_basicvis_mean_disjoint = rep(NA,b)                                      
+  Nh_basic_sum_disjoint = rep(NA,length(parameters))
+  #Nh_basicvis_sum_disjoint = rep(NA,length(parameters))
+  Nh_basic_mean_disjoint = rep(NA,length(parameters))
+  #Nh_basicvis_mean_disjoint = rep(NA,length(parameters))                                    
   
-  Nh_PIMLE_disjoint = rep(NA,b) 
-  #Nh_PIMLEvis_disjoint = rep(NA,b) 
+  Nh_PIMLE_disjoint = rep(NA,length(parameters))
+  #Nh_PIMLEvis_disjoint = rep(NA,length(parameters))
   
-  Nh_MLE_disjoint = rep(NA,b) 
-  #Nh_MLEvis_disjoint = rep(NA,b) 
+  Nh_MLE_disjoint = rep(NA,length(parameters))
+  #Nh_MLEvis_disjoint = rep(NA,length(parameters))
   
-  Nh_MoS_disjoint = rep(NA,b) 
-  #Nh_MoSvis_disjoint = rep(NA,b) 
+  Nh_MoS_disjoint = rep(NA,length(parameters))
+  #Nh_MoSvis_disjoint = rep(NA,length(parameters)) 
   
-  Nh_GNSUM_disjoint = rep(NA,b)
+  Nh_GNSUM_disjoint = rep(NA,length(parameters))
   
-  Nh_Direct_disjoint = rep(NA,b)
+  Nh_TEO_disjoint    = rep(NA,length(parameters))
+  Nh_Zheng_disjoint  = rep(NA,length(parameters))
+  
+  Nh_MLE_mod_disjoint     = rep(NA,length(parameters))
+  #Nh_MLE_modvis_disjoint = rep(NA,length(parameters))
   
   
   for (i in 1:length(parameters)) {
@@ -166,30 +176,42 @@ for (l in 1:b) {
     
     Nh_GNSUM[i] =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
     
+    Nh_MLE_mod[i]  = getNh_MLE_mod(survey, v_pop_total, N)
+    #Nh_MLE_modvis[i]  = getNh_MLE_modvis(survey, v_pop_total, N, vf_estimate)
+    
+    Nh_TEO[i]      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    Nh_Zheng[i]    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    
     Nh_Direct[i] = getNh_Direct(survey, N)
     
     
     #Estimations
     Nh_real_disjoint[i] = sum(Population_disjoint$hidden_population) 
     
-    Nh_basic_sum_disjoint[i]    = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum_disjoint[i] = getNh_basicvis_sum(survey,N,vf_estimate_disjoint)
+    Nh_basic_sum_disjoint[i]    = getNh_basic_sum(survey_disjoint,N) 
+    #Nh_basicvis_sum_disjoint[i] = getNh_basicvis_sum(survey_disjoint,N,vf_estimate_disjoint)
     
-    Nh_basic_mean_disjoint[i]    = getNh_basic_mean(survey,N) 
-    #Nh_basicvis_mean_disjoint[i] = getNh_basicvis_mean(survey,N,vf_estimate_disjoint)
+    Nh_basic_mean_disjoint[i]    = getNh_basic_mean(survey_disjoint,N) 
+    #Nh_basicvis_mean_disjoint[i] = getNh_basicvis_mean(survey_disjoint,N,vf_estimate_disjoint)
     
-    Nh_PIMLE_disjoint[i] = getNh_PIMLE(survey, v_pop_total_disjoint, N)
-    #Nh_PIMLEvis_disjoint[i] = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_estimate_disjoint)
+    Nh_PIMLE_disjoint[i] = getNh_PIMLE(survey_disjoint, v_pop_total_disjoint, N)
+    #Nh_PIMLEvis_disjoint[i] = getNh_PIMLEvis(survey_disjoint, v_pop_total_disjoint, N, vf_estimate_disjoint)
     
-    Nh_MLE_disjoint[i] = getNh_MLE(survey, v_pop_total_disjoint)
-    #Nh_MLEvis_disjoint[i] = getNh_MLEvis(survey, v_pop_total_disjoint, vf_estimate_disjoint)
+    Nh_MLE_disjoint[i] = getNh_MLE(survey_disjoint, v_pop_total_disjoint)
+    #Nh_MLEvis_disjoint[i] = getNh_MLEvis(survey_disjoint, v_pop_total_disjoint, vf_estimate_disjoint)
     
-    Nh_MoS_disjoint[i] = getNh_MoS(survey, v_pop_total_disjoint, N)
-    #Nh_MoSvis_disjoint[i] = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_estimate_disjoint)
+    Nh_MoS_disjoint[i] = getNh_MoS(survey_disjoint, v_pop_total_disjoint, N)
+    #Nh_MoSvis_disjoint[i] = getNh_MoSvis(survey_disjoint, v_pop_total_disjoint, N, vf_estimate_disjoint)
     
-    Nh_GNSUM_disjoint[i] =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)
+    Nh_GNSUM_disjoint[i] =  getNh_GNSUM(survey_disjoint, survey_disjoint_hp, v_pop_total_disjoint, N)
     
-    Nh_Direct_disjoint[i] = getNh_Direct(survey, N)
+    Nh_TEO_disjoint[i]    = getNh_TEO(survey_disjoint, v_pop_prob, N, iter = 1000)
+    Nh_Zheng_disjoint[i]  = getNh_Zheng(survey_disjoint, v_pop_prob, N, iterations = 5000, burnins =1000)
+    
+    Nh_MLE_mod_disjoint[i]      = getNh_MLE_mod(survey_disjoint, v_pop_total_disjoint, N)
+    #Nh_MLE_modvis_disjoint[i]  = getNh_MLE_modvis(survey_disjoint, v_pop_total_disjoint, N, vf_estimate)
+    
+    Nh_Direct_disjoint[i] = getNh_Direct(survey_disjoint, N)
   }
   
   #Dataframe construction
@@ -229,6 +251,18 @@ for (l in 1:b) {
   
   simulaciones = cbind(simulaciones,Nh_GNSUM = Nh_GNSUM)
   names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_GNSUM_",l)
+  
+  simulaciones = cbind(simulaciones,Nh_TEO = Nh_TEO)
+  names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_TEO_",l)
+  
+  simulaciones = cbind(simulaciones,Nh_Zheng = Nh_Zheng)
+  names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_Zheng_",l)
+  
+  simulaciones = cbind(simulaciones,Nh_MLE_mod = Nh_MLE_mod)
+  names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_MLE_mod_",l)
+  
+  #simulaciones = cbind(simulaciones,Nh_MLE_modvis = Nh_MLE_modvis)
+  #names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_MLE_modvis_",l)
   
   simulaciones = cbind(simulaciones,Nh_Direct = Nh_Direct)
   names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_Direct_",l)
@@ -271,6 +305,18 @@ for (l in 1:b) {
   
   simulaciones_disjoint = cbind(simulaciones_disjoint,Nh_GNSUM = Nh_GNSUM_disjoint)
   names(simulaciones_disjoint)[dim(simulaciones_disjoint)[2]] = str_c("Nh_GNSUM_",l)
+  
+  simulaciones_disjoint = cbind(simulaciones_disjoint, Nh_TEO = Nh_TEO_disjoint)
+  names(simulaciones_disjoint)[dim(simulaciones_disjoint)[2]] = str_c("Nh_TEO_",l)
+  
+  simulaciones_disjoint = cbind(simulaciones_disjoint,Nh_Zheng = Nh_Zheng_disjoint)
+  names(simulaciones_disjoint)[dim(simulaciones_disjoint)[2]] = str_c("Nh_Zheng_",l)
+  
+  simulaciones_disjoint = cbind(simulaciones_disjoint,Nh_MLE_mod = Nh_MLE_mod_disjoint)
+  names(simulaciones_disjoint)[dim(simulaciones_disjoint)[2]] = str_c("Nh_MLE_mod_",l)
+  
+  #simulaciones_disjoint = cbind(simulaciones_disjoint,Nh_MLE_modvis = Nh_MLE_modvis_disjoint)
+  #names(simulaciones_disjoint)[dim(simulaciones_disjoint)[2]] = str_c("Nh_MLE_modvis_",l)
   
   simulaciones_disjoint = cbind(simulaciones_disjoint,Nh_Direct = Nh_Direct_disjoint)
   names(simulaciones_disjoint)[dim(simulaciones_disjoint)[2]] = str_c("Nh_Direct_",l)
