@@ -101,30 +101,6 @@ for (w in 1:length(parameters)) {
   #Subpopulation number
   v_pop_total = getV_pop(n_pop, Population)
   
-  #Variable reset
-  Nh_real =  rep(NA,b) 
-  
-  #Nh_basic_sum     = rep(NA,b) 
-  #Nh_basicvis_sum  = rep(NA,b) 
-  #Nh_basic_mean    = rep(NA,b) 
-  #Nh_basicvis_mean = rep(NA,b)                                      
-  
-  Nh_PIMLE     = rep(NA,b) 
-  #Nh_PIMLEvis = rep(NA,b) 
-  
-  Nh_MLE     = rep(NA,b) 
-  #Nh_MLEvis = rep(NA,b) 
-  
-  Nh_MoS     = rep(NA,b) 
-  #Nh_MoSvis = rep(NA,b) 
-  
-  Nh_GNSUM   = rep(NA,b) 
-  
-  Nh_TEO    = rep(NA, b)
-  Nh_Zheng  = rep(NA, b)
-  
-  Nh_MLE_mod     = rep(NA,b) 
-  #Nh_Mod_modvis = rep(NA,b)
   
   lista_sim = list() 
   
@@ -158,13 +134,16 @@ for (w in 1:length(parameters)) {
     Nh_MoS      = getNh_MoS(survey, v_pop_total, N)
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
-    Nh_GNSUM    = getNh_GNSUM(survey, survey_hp, v_pop_total, N) 
-    
     Nh_MLE_mod  = getNh_MLE_mod(survey, v_pop_total, N)
     #Nh_Mod_modvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
+    Nh_GNSUM    = getNh_GNSUM(survey, survey_hp, v_pop_total, N) 
+    
     Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    #Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    
     Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
     
     
     #Dataframe for saving the estimates
@@ -210,11 +189,17 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    sim = cbind(sim, Nh_TEO = Nh_TEO)
-    names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
+    #sim = cbind(sim, Nh_TEO = Nh_TEO)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
     
-    sim = cbind(sim, Nh_Zheng = Nh_Zheng)
-    names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
+    names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
+    
+    #sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    
+    sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
+    names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
     lista_sim[[l]] = sim
   }

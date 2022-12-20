@@ -6,7 +6,6 @@
 #######################
 # Libraries used #    #
 library(igraph)       #
-library(tidyverse)    #
 library(stringr)      #
 library(ggplot2)      #
 library(sampler)      #
@@ -606,7 +605,7 @@ gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_m
   
   # Matrix representing the directed graph that connects individuals with the people of the Hidden Population they know 
   M_hp     =  matrixHP(net, hp_df)
-  M_vis =  matrixHP_visibility(M_hp, vis_factor)
+  M_vis    =  matrixHP_visibility(M_hp, vis_factor)
   
   # Dataframe of the population generation
   population_buc  = hp_df #Hidden population

@@ -48,7 +48,7 @@ v_pop_total = getV_pop(n_pop, Population)
 ## Auxiliary data for the simulation ##
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 50)
+parameters = seq(from = 0, to = 1, length.out = 20)
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -97,32 +97,6 @@ for (w in 1:length(parameters)) {
   ##########################################  
   ##   Not disjoint population analysis   ##
   
-  ## Variable reset ##
-  
-  Nh_real = rep(NA,b) 
-  
-  Nh_basic_sum      = rep(NA,b) 
-  #Nh_basicvis_sum  = rep(NA,b) 
-  Nh_basic_mean     = rep(NA,b) 
-  #Nh_basicvis_mean = rep(NA,b)                                      
-  
-  #Nh_PIMLE    = rep(NA,b) 
-  #Nh_PIMLEvis = rep(NA,b) 
-  
-  #Nh_MLE    = rep(NA,b) 
-  #Nh_MLEvis = rep(NA,b) 
-  
-  #Nh_MoS    = rep(NA,b) 
-  #Nh_MoSvis = rep(NA,b) 
-  
-  #Nh_GNSUM = rep(NA,b) 
-  
-  #Nh_MLE_mod     = rep(NA,b) 
-  #Nh_MLE_modvis = rep(NA,b)
-  
-  #Nh_Teo = getNh_Teo(survey,knowpopulation_data,NITERATION)
-  #Nh_overdispersed = getNh_overdispersed(survey, v_pop_total,N, warmup,iterations,chains=1)
-  
   lista_sim = list()
   
   # Population for the VF estimate
@@ -155,15 +129,18 @@ for (w in 1:length(parameters)) {
     #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_estimate)
     
     #Nh_MLE_mod  = getNh_MLE_mod(survey, v_pop_total, N)
-    #Nh_Mod_modvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
+    #Nh_MLE_modvis  = getNh_MLE_modvis(survey, v_pop_total, N, vf_estimate)
     
     #Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
     #Nh_GNSUM   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
     
-    #Nh_Teo           = getNh_Teo(survey,v_pop_total)
-    #Nh_overdispersed = getNh_overdispersed(survey, v_pop_total,N)
+    #Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    #Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    
+    #Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
     
     
     
@@ -210,11 +187,17 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
     #names(sim)[dim(sim)[2]]  = str_c("Nh_GNSUM_",l)
     
-    #sim = cbind(sim,Nh_Teo = Nh_Teo)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_Teo_",l)
+    #sim = cbind(sim, Nh_TEO = Nh_TEO)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
     
-    #sim = cbind(sim,Nh_Overdispersed = Nh_Overdispersed)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_Overdispersed_",l)
+    #sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
+    
+    #sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    
+    #sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
     lista_sim[[l]] = sim
   }
@@ -247,7 +230,6 @@ png(filename = plot_name,
     width = 1000, height = 1000)
 net_analysis(net_sw, Population, p, 2*nei)
 dev.off()
-
 
 
 #################### COMPUTATION TIME ANALYSIS #################################

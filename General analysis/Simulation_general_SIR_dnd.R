@@ -7,7 +7,7 @@ t = Sys.time()
 ################ WARNING #########################################################
 # IT IS IMPORTANT TO LEAVE THIS FACTOR AS 0, SINCE THE FIRST POPULATION THAT WE ARE 
 # GOING TO BUILD WILL BE A BASIS FOR THE REST
-visibility_factor = 1         # Visibility factor (Binomial's probability)
+sub_memory_factor = 0      #Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 ################################################################################
 
 N = 10000                     # Population size
@@ -19,7 +19,8 @@ n_survey = 500                # Number of individuals we draw in the survey
 n_survey_hp = 50              # Number of individuals we draw in the hidden population survey 
 
 memory_factor = 0             # reach memory factor (parameter to change variance of the perturbations' normal)
-sub_memory_factor = 0         #Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+visibility_factor = 1         # Visibility factor (Binomial's probability)
+
 
 seed = 207                    # Seed
 set.seed(seed)
@@ -39,25 +40,21 @@ net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 ## Populations ##
 # Not disjoint population #
+Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model)
 
-Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model)
+net_sw       = Graph_population_matrix[[1]]   # Population´s graph
+Population   = Graph_population_matrix[[2]]   # Population
+Mhp_model    = Graph_population_matrix[[3]]   # Population's visibility matrix
 
-net_sw = Graph_population_matrix[[1]]       # Population´s graph
-Population = Graph_population_matrix[[2]]   # Population
-Mhp_model = Graph_population_matrix[[3]]      # Population's visibility matrix
-
-#Vector with the number of people in each subpopulation
-
+# Population number
 v_pop_total = getV_pop(n_pop, Population)
-
-################################################################################
 
 # Disjoint population #
 
 Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_model, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
 
-v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
-################################################################################
+# Population number (disjoint)
+v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 
 
 ################################################################################
@@ -71,7 +68,7 @@ simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of iterations for the simulation
-b = 10
+b = 100
 
 matrix_vfe            = matrix(0, length(parameters), b)
 matrix_vfe_disjoint   = matrix(0, length(parameters), b)
@@ -131,6 +128,32 @@ for (w in 1:length(parameters)) {
   ##########################################  
   ##   Not disjoint population analysis   ##
   
+  ## Variable reset ##
+  
+  Nh_real =  rep(NA,b) 
+  
+  #Nh_basic_sum = rep(NA,b) 
+  #Nh_basicvis_sum = rep(NA,b) 
+  #Nh_basic_mean = rep(NA,b) 
+  #Nh_basicvis_mean = rep(NA,b)                                      
+  
+  Nh_PIMLE = rep(NA,b) 
+  #Nh_PIMLEvis = rep(NA,b) 
+  
+  Nh_MLE = rep(NA,b) 
+  #Nh_MLEvis = rep(NA,b) 
+  
+  Nh_MoS = rep(NA,b) 
+  #Nh_MoSvis = rep(NA,b) 
+  
+  Nh_GNSUM = rep(NA,b) 
+  
+  Nh_TEO    = rep(NA, b)
+  Nh_Zheng  = rep(NA, b)
+  
+  Nh_MLE_mod     = rep(NA,b) 
+  #Nh_MLE_modvis = rep(NA,b)
+  
   lista_sim = list()
   
   # Population for the VF estimate
@@ -150,85 +173,77 @@ for (w in 1:length(parameters)) {
     #Hidden population estimates
     Nh_real = sum(Population$hidden_population) 
     
-    #Nh_basic_sum    = getNh_basic_sum(survey,N) 
-    Nh_basicvis_sum = getNh_basicvis_sum(survey,N,vf_estimate) 
-    #Nh_basic_mean    = getNh_basic_mean(survey,N) 
-    Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_estimate) 
+    Nh_basic_sum    = getNh_basic_sum(survey,N) 
+    #Nh_basicvis_sum = getNh_basicvis_sum(survey,N,vf_subpop) 
+    Nh_basic_mean    = getNh_basic_mean(survey,N) 
+    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_subpop) 
     
-    #Nh_PIMLE    = getNh_PIMLE(survey, v_pop_total, N)
-    Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, vf_estimate)
+    Nh_PIMLE    = getNh_PIMLE(survey, v_pop_total, N)
+    #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, vf_subpop)
     
-    #Nh_MLE     = getNh_MLE(survey, v_pop_total)
-    Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_estimate)
+    Nh_MLE     = getNh_MLE(survey, v_pop_total)
+    #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_subpop)
     
-    #Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
-    Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
+    Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
+    #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_subpop)
     
-    #Nh_MLE_mod  = getNh_MLE_mod(survey, v_pop_total, N)
-    Nh_MLE_modvis  = getNh_MLE_modvis(survey, v_pop_total, N, vf_estimate)
+    Nh_GNSUM    =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
     
-    Nh_GNSUM     =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
+    Nh_MLE_mod  = getNh_MLE_mod(survey, v_pop_total, N)
+    #Nh_MLE_modvis  = getNh_MLE_modvis(survey, v_pop_total, N, vf_estimate)
     
-    #Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
-    Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
-    
-    #Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
-    Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
+    Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
     
     #Dataframe for saving the estimates
     sim = data.frame(Nh_real = Nh_real)
     names(sim)[dim(sim)[2]] = str_c("Nh_real_",l)
     
-    #sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
+    sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
+    names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
     
-    sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
+    #sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
     
-    #sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
+    sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
+    names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
     
-    sim = cbind(sim,Nh_basicvis_mean = Nh_basicvis_mean)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
+    #sim = cbind(sim,Nh_basicvis_mean = Nh_basicvis_mean)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
     
-    #sim = cbind(sim,Nh_PIMLE = Nh_PIMLE)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_PIMLE_",l)
+    sim = cbind(sim,Nh_PIMLE = Nh_PIMLE)
+    names(sim)[dim(sim)[2]] = str_c("Nh_PIMLE_",l)
     
-    sim = cbind(sim,Nh_PIMLEvis = Nh_PIMLEvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_PIMLEvis_",l)
+    #sim = cbind(sim,Nh_PIMLEvis = Nh_PIMLEvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_PIMLEvis_",l)
     
-    #sim = cbind(sim,Nh_MLE = Nh_MLE)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_",l)
+    sim = cbind(sim,Nh_MLE = Nh_MLE)
+    names(sim)[dim(sim)[2]] = str_c("Nh_MLE_",l)
     
-    sim = cbind(sim,Nh_MLEvis = Nh_MLEvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_MLEvis_",l)
+    #sim = cbind(sim,Nh_MLEvis = Nh_MLEvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_MLEvis_",l)
     
-    #sim = cbind(sim,Nh_MoS = Nh_MoS)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_MoS_",l)
+    sim = cbind(sim,Nh_MoS = Nh_MoS)
+    names(sim)[dim(sim)[2]] = str_c("Nh_MoS_",l)
     
-    sim = cbind(sim,Nh_MoSvis = Nh_MoSvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_MoSvis_",l)
+    #sim = cbind(sim,Nh_MoSvis = Nh_MoSvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_MoSvis_",l)
     
     sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
     names(sim)[dim(sim)[2]] = str_c("Nh_GNSUM_",l)
     
-    #sim = cbind(sim,Nh_MLE_mod = Nh_MLE_mod)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_mod_",l)
+    sim = cbind(sim,Nh_MLE_mod = Nh_MLE_mod)
+    names(sim)[dim(sim)[2]] = str_c("Nh_MLE_mod_",l)
     
-    sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
+    #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    #sim = cbind(sim, Nh_TEO = Nh_TEO)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
+    sim = cbind(sim, Nh_TEO = Nh_TEO)
+    names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
     
-    sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
+    sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
     
-    #sim = cbind(sim, Nh_Zheng = Nh_Zheng)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
-    
-    sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
     matrix_vfe[w,l] = vf_estimate
     lista_sim[[l]] = sim
@@ -236,10 +251,34 @@ for (w in 1:length(parameters)) {
   simulacion = bind_cols(lista_sim)
   lista_simulacion[[w]] = simulacion
   
-  
-  
   ######################################
   ## Disjoint subpopulations analysis ##
+  
+  ## Variable reset ##
+  
+  Nh_real_disjoint =  rep(NA,b) 
+  
+  Nh_basic_sum_disjoint = rep(NA,b) 
+  #Nh_basicvis_sum_disjoint = rep(NA,b) 
+  Nh_basic_mean_disjoint = rep(NA,b) 
+  #Nh_basicvis_mean_disjoint = rep(NA,b)                                      
+  
+  Nh_PIMLE_disjoint = rep(NA,b) 
+  #Nh_PIMLEvis_disjoint = rep(NA,b) 
+  
+  Nh_MLE_disjoint = rep(NA,b) 
+  #Nh_MLEvis_disjoint = rep(NA,b) 
+  
+  Nh_MoS_disjoint = rep(NA,b) 
+  #Nh_MoSvis_disjoint = rep(NA,b) 
+  
+  Nh_GNSUM_disjoint = rep(NA,b) 
+  
+  Nh_TEO_disjoint    = rep(NA, b)
+  Nh_Zheng_disjoint  = rep(NA, b)
+  
+  Nh_MLE_mod_disjoint     = rep(NA,b) 
+  #Nh_MLE_modvis_disjoint = rep(NA,b) 
   
   lista_sim_disjoint = list()
   
@@ -262,86 +301,77 @@ for (w in 1:length(parameters)) {
     #Hidden population estimates
     Nh_real_disjoint = sum(Population_disjoint$hidden_population) 
     
-    #Nh_basic_sum_disjoint    = getNh_basic_sum(survey,N) 
-    Nh_basicvis_sum_disjoint = getNh_basicvis_sum(survey,N,vf_estimate) 
-    #Nh_basic_mean_disjoint    = getNh_basic_mean(survey,N) 
-    Nh_basicvis_mean_disjoint = getNh_basicvis_mean(survey,N,vf_estimate) 
+    Nh_basic_sum_disjoint    = getNh_basic_sum(survey,N) 
+    #Nh_basicvis_sum_disjoint = getNh_basicvis_sum(survey,N,vf_subpop) 
+    Nh_basic_mean_disjoint    = getNh_basic_mean(survey,N) 
+    #Nh_basicvis_mean_disjoint = getNh_basicvis_mean(survey,N,vf_subpop) 
     
-    #Nh_PIMLE_disjoint    = getNh_PIMLE(survey, v_pop_total_disjoint, N)
-    Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_estimate)
+    Nh_PIMLE_disjoint    = getNh_PIMLE(survey, v_pop_total_disjoint, N)
+    #Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_subpop)
     
-    #Nh_MLE_disjoint     = getNh_MLE(survey, v_pop_total_disjoint)
-    Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_estimate)
+    Nh_MLE_disjoint     = getNh_MLE(survey, v_pop_total_disjoint)
+    #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_subpop)
     
-    #Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
-    Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_estimate)
-    
-    #Nh_MLE_mod_disjoint      = getNh_MLE_mod(survey, v_pop_total_disjoint, N)
-    Nh_MLE_modvis_disjoint  = getNh_MLE_modvis(survey, v_pop_total_disjoint, N, vf_estimate)
+    Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
+    #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_subpop)
     
     Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)    
     
-    #Nh_TEO_disjoint    = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
-    Nh_TEOvis_disjoint    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    Nh_TEO_disjoint    = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    Nh_Zheng_disjoint  = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
     
-    #Nh_Zheng_disjoint  = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
-    Nh_Zhengvis_disjoint  = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins =1000)
-    
+    Nh_MLE_mod_disjoint      = getNh_MLE_mod(survey, v_pop_total_disjoint, N)
+    #Nh_MLE_modvis_disjoint  = getNh_MLE_modvis(survey, v_pop_total_disjoint, N, vf_estimate)
     
     #Dataframe for saving the estimates
     sim_disjoint = data.frame(Nh_real = Nh_real_disjoint)
     names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_real_",l)
     
-    #sim_disjoint = cbind(sim_disjoint,Nh_basic_sum = Nh_basic_sum_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basic_sum_",l)
+    sim_disjoint = cbind(sim_disjoint,Nh_basic_sum = Nh_basic_sum_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basic_sum_",l)
     
-    sim_disjoint = cbind(sim_disjoint,Nh_basicvis_sum = Nh_basicvis_sum_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basicvis_sum_",l)
+    #sim_disjoint = cbind(sim_disjoint,Nh_basicvis_sum = Nh_basicvis_sum_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basicvis_sum_",l)
     
-    #sim_disjoint = cbind(sim_disjoint,Nh_basic_mean = Nh_basic_mean_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basic_mean_",l)
+    sim_disjoint = cbind(sim_disjoint,Nh_basic_mean = Nh_basic_mean_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basic_mean_",l)
     
-    sim_disjoint = cbind(sim_disjoint,Nh_basicvis_mean = Nh_basicvis_mean_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basicvis_mean_",l)
+    #sim_disjoint = cbind(sim_disjoint,Nh_basicvis_mean = Nh_basicvis_mean_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basicvis_mean_",l)
     
-    #sim_disjoint = cbind(sim_disjoint,Nh_PIMLE = Nh_PIMLE_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_PIMLE_",l)
+    sim_disjoint = cbind(sim_disjoint,Nh_PIMLE = Nh_PIMLE_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_PIMLE_",l)
     
-    sim_disjoint = cbind(sim_disjoint,Nh_PIMLEvis = Nh_PIMLEvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_PIMLEvis_",l)
+    #sim_disjoint = cbind(sim_disjoint,Nh_PIMLEvis = Nh_PIMLEvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_PIMLEvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint,Nh_MLE = Nh_MLE_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_",l)
+    sim_disjoint = cbind(sim_disjoint,Nh_MLE = Nh_MLE_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_",l)
     
-    sim_disjoint = cbind(sim_disjoint,Nh_MLEvis = Nh_MLEvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLEvis_",l)
+    #sim_disjoint = cbind(sim_disjoint,Nh_MLEvis = Nh_MLEvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLEvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint,Nh_MoS = Nh_MoS_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoS_",l)
+    sim_disjoint = cbind(sim_disjoint,Nh_MoS = Nh_MoS_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoS_",l)
     
-    sim_disjoint = cbind(sim_disjoint,Nh_MoSvis = Nh_MoSvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoSvis_",l)
+    #sim_disjoint = cbind(sim_disjoint,Nh_MoSvis = Nh_MoSvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoSvis_",l)
     
     sim_disjoint = cbind(sim_disjoint, Nh_GNSUM = Nh_GNSUM_disjoint)
     names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
     
-    #sim_disjoint = cbind(sim_disjoint,Nh_MLE_mod = Nh_MLE_mod_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_mod_",l)
+    sim_disjoint = cbind(sim_disjoint,Nh_MLE_mod = Nh_MLE_mod_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_mod_",l)
     
-    sim_disjoint = cbind(sim_disjoint,Nh_MLE_modvis = Nh_MLE_modvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_modvis_",l)
+    #sim_disjoint = cbind(sim_disjoint,Nh_MLE_modvis = Nh_MLE_modvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint, Nh_TEO = Nh_TEO_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEO_",l)
+    sim_disjoint = cbind(sim_disjoint, Nh_TEO = Nh_TEO_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEO_",l)
     
-    sim_disjoint = cbind(sim_disjoint, Nh_TEOvis = Nh_TEOvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEOvis_",l)
+    sim_disjoint = cbind(sim_disjoint, Nh_Zheng = Nh_Zheng_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zheng_",l)
     
-    #sim_disjoint = cbind(sim_disjoint, Nh_Zheng = Nh_Zheng_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zheng_",l)
-    
-    sim_disjoint = cbind(sim_disjoint, Nh_Zhengvis = Nh_Zhengvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zhengvis_",l)
     
     matrix_vfe_disjoint[w,l] = vf_estimate
     lista_sim_disjoint[[l]] = sim_disjoint
@@ -362,7 +392,7 @@ simulaciones_disjoint["data"] = parameters
 
 
 ################################################################################
-file_name = str_c("Simulation_visibilityfactor_notdisjoint_uniform_", seed, ".csv")
+file_name = str_c("Simulation_visibilityfactor_notdisjoint_SIR_", seed, ".csv")
 write.csv(simulaciones,                         # Data frame
           file = file_name,                     # Csv's name
           row.names = TRUE )                    # Row names: TRUE o FALSE 
@@ -370,25 +400,26 @@ write.csv(simulaciones,                         # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_visibilityfactor_disjoint_uniform_", seed,".csv")
+file_name_disjoint = str_c("Simulation_visibilityfactor_disjoint_SIR_", seed,".csv")
 write.csv(simulaciones_disjoint,                # Data frame
           file = file_name_disjoint,            # Csv's name
           row.names = TRUE )                    # Row names: TRUE o FALSE 
 ################################################################################
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_visibilityfactor_disjoint_vfe_matrix_uniform_", seed,".csv")
+file_name_disjoint = str_c("Simulation_visibilityfactor_disjoint_vfe_matrix_SIR_", seed,".csv")
 write.csv(matrix_vfe_disjoint,                  # Data frame
           file = file_name_disjoint,            # Csv's name
           row.names = TRUE )                    # Row names: TRUE o FALSE 
 ################################################################################
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_visibilityfactor_notdisjoint_vfe_matrix_uniform_", seed,".csv")
+file_name_disjoint = str_c("Simulation_visibilityfactor_notdisjoint_vfe_matrix_SIR_", seed,".csv")
 write.csv(matrix_vfe,                  # Data frame
           file = file_name_disjoint,            # Csv's name
           row.names = TRUE )                    # Row names: TRUE o FALSE 
 ################################################################################
+
 
 timer = Sys.time() - t
 timer

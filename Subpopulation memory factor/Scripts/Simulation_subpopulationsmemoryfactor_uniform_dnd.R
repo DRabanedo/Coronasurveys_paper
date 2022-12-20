@@ -68,7 +68,7 @@ simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of iterations for the simulation
-b = 100
+b = 10
 
 lista_simulacion          = list()
 lista_simulacion_disjoint = list()
@@ -125,32 +125,6 @@ for (w in 1:length(parameters)) {
   ##########################################  
   ##   Not disjoint population analysis   ##
   
-  ## Variable reset ##
-  
-  Nh_real =  rep(NA,b) 
-  
-  #Nh_basic_sum = rep(NA,b) 
-  #Nh_basicvis_sum = rep(NA,b) 
-  #Nh_basic_mean = rep(NA,b) 
-  #Nh_basicvis_mean = rep(NA,b)                                      
-  
-  Nh_PIMLE = rep(NA,b) 
-  #Nh_PIMLEvis = rep(NA,b) 
-  
-  Nh_MLE = rep(NA,b) 
-  #Nh_MLEvis = rep(NA,b) 
-  
-  Nh_MoS = rep(NA,b) 
-  #Nh_MoSvis = rep(NA,b) 
-  
-  Nh_GNSUM = rep(NA,b) 
-  
-  Nh_TEO    = rep(NA, b)
-  Nh_Zheng  = rep(NA, b)
-  
-  Nh_MLE_mod     = rep(NA,b) 
-  #Nh_MLE_modvis = rep(NA,b)
-  
   lista_sim = list()
   
   # Population for the VF estimate
@@ -190,7 +164,10 @@ for (w in 1:length(parameters)) {
     #Nh_MLE_modvis  = getNh_MLE_modvis(survey, v_pop_total, N, vf_estimate)
     
     Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    #Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    
     Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
     
     
     #Dataframe for saving the estimates
@@ -236,11 +213,17 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    sim = cbind(sim, Nh_TEO = Nh_TEO)
-    names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
+    #sim = cbind(sim, Nh_TEO = Nh_TEO)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
     
-    sim = cbind(sim, Nh_Zheng = Nh_Zheng)
-    names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
+    names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
+    
+    #sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    
+    sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
+    names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
     lista_sim[[l]] = sim
   }
@@ -249,32 +232,6 @@ for (w in 1:length(parameters)) {
   
   ######################################
   ## Disjoint subpopulations analysis ##
-  
-  ## Variable reset ##
-  
-  Nh_real_disjoint =  rep(NA,b) 
-  
-  #Nh_basic_sum_disjoint = rep(NA,b) 
-  #Nh_basicvis_sum_disjoint = rep(NA,b) 
-  #Nh_basic_mean_disjoint = rep(NA,b) 
-  #Nh_basicvis_mean_disjoint = rep(NA,b)                                      
-  
-  Nh_PIMLE_disjoint = rep(NA,b) 
-  #Nh_PIMLEvis_disjoint = rep(NA,b) 
-  
-  Nh_MLE_disjoint = rep(NA,b) 
-  #Nh_MLEvis_disjoint = rep(NA,b) 
-  
-  Nh_MoS_disjoint = rep(NA,b) 
-  #Nh_MoSvis_disjoint = rep(NA,b) 
-  
-  Nh_GNSUM_disjoint = rep(NA,b)
-  
-  Nh_TEO_disjoint    = rep(NA, b)
-  Nh_Zheng_disjoint  = rep(NA, b)
-  
-  Nh_MLE_mod_disjoint     = rep(NA,b) 
-  #Nh_MLE_modvis_disjoint = rep(NA,b) 
   
   lista_sim_disjoint = list()
   
@@ -308,16 +265,20 @@ for (w in 1:length(parameters)) {
     Nh_MLE_disjoint     = getNh_MLE(survey, v_pop_total_disjoint)
     #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_subpop)
     
+    Nh_MLE_mod_disjoint      = getNh_MLE_mod(survey, v_pop_total_disjoint, N)
+    #Nh_MLE_modvis_disjoint  = getNh_MLE_modvis(survey, v_pop_total_disjoint, N, vf_estimate)
+    
     Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
     #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_subpop)
     
     Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)   
     
     Nh_TEO_disjoint    = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
-    Nh_Zheng_disjoint  = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_TEOvis_disjoint    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
     
-    Nh_MLE_mod_disjoint      = getNh_MLE_mod(survey, v_pop_total_disjoint, N)
-    #Nh_MLE_modvis_disjoint  = getNh_MLE_modvis(survey, v_pop_total_disjoint, N, vf_estimate)
+    Nh_Zheng_disjoint  = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_Zhengvis_disjoint  = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins =1000)
+    
     
     
     #Dataframe for saving the estimates
@@ -366,8 +327,14 @@ for (w in 1:length(parameters)) {
     sim_disjoint = cbind(sim_disjoint, Nh_TEO = Nh_TEO_disjoint)
     names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEO_",l)
     
+    #sim_disjoint = cbind(sim_disjoint, Nh_TEOvis = Nh_TEOvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEOvis_",l)
+    
     sim_disjoint = cbind(sim_disjoint, Nh_Zheng = Nh_Zheng_disjoint)
     names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zheng_",l)
+    
+    #sim_disjoint = cbind(sim_disjoint, Nh_Zhengvis = Nh_Zhengvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zhengvis_",l)
     
     lista_sim_disjoint[[l]] = sim_disjoint
   }
