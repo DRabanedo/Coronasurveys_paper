@@ -35,7 +35,7 @@ memory_factor = 0
 # Seed to obtain the fixed parameters #
 seed = 921  
 # Seed to perform the simulation #
-seed = 2022
+seed_sim = 2022
 
 ################################################################################
 ## Graph  properties ##
