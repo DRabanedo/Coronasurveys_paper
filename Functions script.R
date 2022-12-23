@@ -587,7 +587,7 @@ matrixHP_visibility = function(M_hp, vis_factor){
 # General population generation #
 
 # Uniform hidden populatio distribution
-gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_mem_factor, beta = 0.115, gamma = 0.115/1.5, chosen_nodes = 1, n_iter = 5, net){
+gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_mem_factor, beta = 0.115, gamma = 0.115/1.5, chosen_nodes = 1, n_iter = 5, net, seed){
   # list, contains the network, the population data and the matrix for the GNSUM
   
   # N:  Population size
@@ -597,8 +597,14 @@ gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_m
   # mem_factor: Memory factor
   # sub_mem_factor: Subpopulation memory factor
   
+  # Seed for homogeneity of the simulations form #
+  set.seed(seed)
+  
   # Subpopulation dataframe
   subpop_df = gen_Subpopulation(n, prob_vect)
+  
+  # Seed for homogeneity of the simulations form #
+  set.seed(seed)
   
   # Hidden population distribution dataframe
   hp_df = gen_HP(n, prob_hp)
@@ -622,7 +628,7 @@ gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_m
 }
 
 # Epidemic data distribution
-gen_Data_SIR = function(n, prob_vect, vis_factor, mem_factor, sub_mem_factor, beta = 0.115, gamma = 0.115/1.5, chosen_nodes = 1, n_iter = 5, net){
+gen_Data_SIR = function(n, prob_vect, vis_factor, mem_factor, sub_mem_factor, beta = 0.115, gamma = 0.115/1.5, chosen_nodes = 1, n_iter = 5, net, seed){
   # list, contains the network, the population data and the matrix for the GNSUM
   
   # N:  Population size
@@ -631,15 +637,21 @@ gen_Data_SIR = function(n, prob_vect, vis_factor, mem_factor, sub_mem_factor, be
   # mem_factor: Memory factor
   # sub_mem_factor: Subpopulation memory factor
   
+  # Seed for homogeneity of the simulations form #
+  set.seed(seed)
+  
   # Subpopulation dataframe
   subpop_df = gen_Subpopulation(n, prob_vect)
+  
+  # Seed for homogeneity of the simulations form #
+  set.seed(seed)
   
   # Hidden population distribution dataframe
   hp_df = gen_SIRpop(n, net ,beta, gamma, chosen_nodes, n_iter)
   
   # Matrix representing the directed graph that connects individuals with the people of the Hidden Population they know 
   M_hp     =  matrixHP(net, hp_df)
-  M_vis =  matrixHP_visibility(M_hp, vis_factor)
+  M_vis    =  matrixHP_visibility(M_hp, vis_factor)
   
   # Dataframe of the population generation
   population_buc  = hp_df #Hidden population
@@ -656,7 +668,7 @@ gen_Data_SIR = function(n, prob_vect, vis_factor, mem_factor, sub_mem_factor, be
 }
 
 # This function generates the population with disjoint populations
-gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor, r, r_mem, hp_t, hp_s) {
+gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor, r, r_mem, hp_t, hp_s, seed) {
   # Generates the entire data for the population
   
   # n: the number of individuals
@@ -664,7 +676,15 @@ gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor
   # HP:  Hidden Population vector
   
   population_buc  = data.frame("hidden_population" = HP)
+  
+  # Seed for homogeneity of the simulations form #
+  set.seed(seed)
+  
   population_buc  = cbind(population_buc, gen_Subpopulation_disjoint(n, prob_vect))
+  
+  # Seed for homogeneity of the simulations form #
+  set.seed(seed)
+  
   population_buc  = cbind(population_buc, reach = r)
   population_buc  = cbind(population_buc, reach_memory = r_mem)
   population_buc  = cbind(population_buc, hp_total = hp_t)
@@ -698,6 +718,7 @@ VF_Estimate = function(enc_hp){
 # Final visibility matrix
 # M_vis = apply(Mhp_sir, c(1,2), to_matrix_SIR)
 ############################################################################
+
 ###################
 # Basic estimator #
 ###################

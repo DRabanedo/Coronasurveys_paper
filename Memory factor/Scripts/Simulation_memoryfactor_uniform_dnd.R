@@ -4,38 +4,63 @@
 
 t = Sys.time()
 
-#####################
-## Simulation data ##
-#####################
+################################
+## Simulation data parameters ##
+################################
 
-N = 10000                     # Population size
-v_pop_prob = rep(1/10, 5)     # Probability of each subpopulation
-n_pop = length(v_pop_prob)    # Number of subpopulations
-n_survey = 500                # Number of individuals we draw in the survey
-n_survey_hp = 50              # Number of individuals we draw in the hidden population survey 
-hp_prob = 0.1                 # Proportion of individuals in the hidden population
+# Population size
+N = 10000
 
-sub_memory_factor = 0         # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1         # Visibility factor (Binomial's probability)
-memory_factor = 0             #reach memory factor (parameter to change variance of the perturbations' normal)
+# Probability of each subpopulation
+v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
 
-seed = 207                    # Seed
+# Number of subpopulations
+n_pop = length(v_pop_prob)   
+
+# Number of individuals we draw in the survey
+n_survey = 500                
+
+# Number of individuals we draw in the hidden population survey 
+n_survey_hp = 50              
+
+# Proportion of individuals in the hidden population
+hp_prob = 0.1 
+
+# Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0   
+
+# Visibility factor (Binomial's probability)
+visibility_factor = 1     
+
+#reach memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0            
+
+# Seed
+# Seed to obtain the fixed parameters #
+seed = 921  
+# Seed to perform the simulation #
+seed = 2022
+
+################################################################################
+## Graph  properties ##
+
+# Graph dimension 
+dim = 1   
+# Number of neighbors per side that each node is connected to (2*nei neighbors) 
+nei = 50     
+# Probability of randomize a connection between nodes. It is applied to all connections
+p   = 0.1   
+
+################################################################################
+# Fixed population parameters #
 set.seed(seed)
 
-#Graph
-dim = 1      # Graph dimension 
-nei = 50     # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
-p   = 0.1    # Probability of randomize a connection. It is applied to all connections
-
-
-###############################################################################################################################################################
 # Network model #
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 ## Populations models ##
 # Not disjoint population #
-Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model)
+Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model, seed = seed)
 
 net_sw     = Graph_population_matrix[[1]]   # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
@@ -48,12 +73,6 @@ v_pop_total = getV_pop(n_pop, Population)
 
 ## Auxiliary data for the simulation ##
 
-# Study parameters
-parameters = seq(from = 0, to = 1, length.out = 20)
-
-#Dataframe to save the data
-simulaciones          = data.frame(data = parameters)
-
 # Variables reach vector
 vect_reach    =  Population$reach
 vect_hp       =  Population$hp_total
@@ -61,12 +80,14 @@ vect_hp_vis   =  rep(NA, nrow(Population))
 vect_reach_re =  rep(NA, nrow(Population))
 
 #Number of iterations for the simulation
-b = 100
+b = 25
 
-lista_simulacion          = list()
+lista_simulacion = list()
 
 ################################################################################
+## Fixed loop parameters ##
 
+set.seed(seed)
 ## Surveys ##
 
 # The surveys are fixed so the variance and bias can be calculated.
@@ -85,6 +106,10 @@ for (h in 1:b) {
 
 # Simulation
 
+# First, the seed of the simulation is chosen
+set.seed(seed_sim)
+
+# Loop
 for (w in 1:length(parameters)) {
   ## Parameter implementation ##
   memory_factor = parameters[w]  
@@ -214,7 +239,7 @@ simulaciones = bind_rows(lista_simulacion)
 simulaciones["data"] = parameters
 
 ################################################################################
-file_name = str_c("Simulations_memoryfactor_", seed,".csv")
+file_name = str_c("Simulations_memoryfactor_uniform_", seed_sim,".csv")
 write.csv(simulaciones,               # Data frame 
           file = file_name,           # Csv name
           row.names = TRUE )          # Row names: TRUE or FALSE 
@@ -226,7 +251,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_memoryfactor_", seed, ".png")
+plot_name = str_c("Network_memoryfactor_uniform_", seed_sim, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)

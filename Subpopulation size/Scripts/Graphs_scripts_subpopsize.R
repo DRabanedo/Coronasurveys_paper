@@ -13,8 +13,8 @@ library(stringr)
 # Data import
 setwd("C:/Users/David Rabanedo/Documents/GitHub/Coronasurveys_paper/Subpopulation size/Graphs")
 
-simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_notdisjoint_par1_207.csv")
-simulation_data_disjoint =read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_disjoint_par1_207.csv")
+simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_notdisjoint_bay_207.csv")
+simulation_data_disjoint =read.csv("~/GitHub/Coronasurveys_paper/Subpopulation size/CSV/Simulations_subpopulationsize_disjoint_bay_207.csv")
 getwd()
 seed_number = 207
 
@@ -40,6 +40,9 @@ Nh_Mod_dataframe     = select(simulation_data, starts_with("Nh_Mod_"))
 
 Nh_GNSUM_dataframe   = select(simulation_data, starts_with("Nh_GNSUM"))
 
+Nh_TEO_dataframe   = select(simulation_data, starts_with("Nh_TEO"))
+
+Nh_Zheng_dataframe   = select(simulation_data, starts_with("Nh_Zheng"))
 
 
 ######### Data analysis ##########
@@ -60,6 +63,10 @@ Nh_Mod_analysis     = data_analysis(Nh_Mod_dataframe, Nh_real_dataframe)
 #Nh_Modvis_analysis = data_analysis(Nh_Modvis_dataframe, Nh_real_dataframe)
 
 Nh_GNSUM_analysis  = data_analysis(Nh_GNSUM_dataframe, Nh_real_dataframe)
+
+Nh_TEO_analysis  = data_analysis(Nh_TEO_dataframe, Nh_real_dataframe)
+
+Nh_Zheng_analysis  = data_analysis(Nh_Zheng_dataframe, Nh_real_dataframe)
 
 
 ################################################################################
@@ -83,6 +90,11 @@ Nh_Mod_dataframe_disjoint     = select(simulation_data_disjoint, starts_with("Nh
 
 Nh_GNSUM_dataframe_disjoint  = select(simulation_data_disjoint, starts_with("Nh_GNSUM"))
 
+Nh_TEO_dataframe_disjoint  = select(simulation_data_disjoint, starts_with("Nh_TEO"))
+
+Nh_Zheng_dataframe_disjoint  = select(simulation_data_disjoint, starts_with("Nh_Zheng"))
+
+
 
 ######### Data analysis ##########
 # This way of presenting the data allows us to carry out a more detailed analysis
@@ -100,7 +112,9 @@ Nh_MoS_analysis_disjoint     = data_analysis(Nh_MoS_dataframe_disjoint, Nh_real_
 
 Nh_GNSUM_analysis_disjoint   = data_analysis(Nh_GNSUM_dataframe_disjoint, Nh_real_dataframe)
 
+Nh_TEO_analysis_disjoint   = data_analysis(Nh_TEO_dataframe_disjoint, Nh_real_dataframe)
 
+Nh_Zheng_analysis_disjoint   = data_analysis(Nh_Zheng_dataframe_disjoint, Nh_real_dataframe)
 
 
 ################################################################################
@@ -128,6 +142,10 @@ graph_data_abserror = cbind(graph_data_abserror, Nh_MoS =  Nh_MoS_analysis$abser
 
 graph_data_abserror = cbind(graph_data_abserror, Nh_GNSUM  =  Nh_GNSUM_analysis$abserror)
 
+graph_data_abserror = cbind(graph_data_abserror, Nh_TEO  =  Nh_TEO_analysis$abserror)
+
+graph_data_abserror = cbind(graph_data_abserror, Nh_Zheng  =  Nh_Zheng_analysis$abserror)
+
 
 # Graph creation
 
@@ -149,6 +167,12 @@ ggplot(graph_data_abserror) +
   
   geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
+  geom_point(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  
+  geom_point(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  
+  
+  
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
@@ -156,8 +180,6 @@ ggplot(graph_data_abserror) +
        y = "Mean Absolute Error")
 
 dev.off()
-
-
 
 ## Disjoint populations ##
 
@@ -272,6 +294,9 @@ graph_data_mse = cbind(graph_data_mse, Nh_MoS =  Nh_MoS_analysis$mse)
 
 graph_data_mse = cbind(graph_data_mse, Nh_GNSUM  =  Nh_GNSUM_analysis$mse)
 
+graph_data_mse = cbind(graph_data_mse, Nh_TEO  =  Nh_TEO_analysis$mse)
+
+graph_data_mse = cbind(graph_data_mse, Nh_Zheng  =  Nh_Zheng_analysis$mse)
 
 # Graph creation
 
@@ -293,6 +318,10 @@ ggplot(graph_data_mse) +
   #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_point(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  
+  geom_point(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -421,6 +450,10 @@ graph_data_bias = cbind(graph_data_bias, Nh_Mod =  Nh_Mod_analysis$bias)
 
 graph_data_bias = cbind(graph_data_bias, Nh_GNSUM  =  Nh_GNSUM_analysis$bias)
 
+graph_data_bias = cbind(graph_data_bias, Nh_TEO  =  Nh_TEO_analysis$bias)
+
+graph_data_bias = cbind(graph_data_bias, Nh_Zheng  =  Nh_Zheng_analysis$bias)
+
 
 # Graph creation
 
@@ -446,6 +479,10 @@ ggplot(graph_data_bias) +
   #geom_point(aes(x = data, y =  Nh_Modvis, col = "Nh_Modvis")) +
   
   geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_point(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  
+  geom_point(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -577,6 +614,10 @@ graph_data_sd = cbind(graph_data_sd, Nh_Mod =  Nh_Mod_analysis$sd)
 
 graph_data_sd = cbind(graph_data_sd, Nh_GNSUM  =  Nh_GNSUM_analysis$sd)
 
+graph_data_sd = cbind(graph_data_sd, Nh_TEO  =  Nh_TEO_analysis$sd)
+
+graph_data_sd = cbind(graph_data_sd, Nh_Zheng  =  Nh_Zheng_analysis$sd)
+
 
 # Data creation
 
@@ -601,6 +642,10 @@ ggplot(graph_data_sd) +
   #geom_point(aes(x = data, y =  Nh_Modvis, col = "Nh_Modvis")) +
   
   geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_point(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  
+  geom_point(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -721,6 +766,10 @@ graph_data_median = cbind(graph_data_median, Nh_MoS =  Nh_MoS_analysis$median)
 
 graph_data_median = cbind(graph_data_median, Nh_GNSUM  =  Nh_GNSUM_analysis$median)
 
+graph_data_median = cbind(graph_data_median, Nh_TEO  =  Nh_TEO_analysis$median)
+
+graph_data_median = cbind(graph_data_median, Nh_Zheng  =  Nh_Zheng_analysis$median)
+
 
 # Data creation
 
@@ -742,6 +791,10 @@ ggplot(graph_data_median) +
   #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_point(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  
+  geom_point(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
