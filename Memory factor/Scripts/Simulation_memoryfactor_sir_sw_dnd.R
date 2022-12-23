@@ -1,3 +1,8 @@
+################################################################################################################
+# Simulation based on the value of the memory factor of the reach variable, leaving the rest of parameters fixed
+################################################################################################################
+
+t = Sys.time()
 
 # Population size
 N = 10000
@@ -51,7 +56,7 @@ net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 ## Populations models ##
 # Not disjoint population #
-Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model)
+Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model, seed = seed)
 
 net_sw     = Graph_population_matrix[[1]]   # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
