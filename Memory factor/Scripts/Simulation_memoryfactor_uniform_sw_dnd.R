@@ -35,9 +35,12 @@ visibility_factor = 1
 #reach memory factor (parameter to change variance of the perturbations' normal)
 memory_factor = 0            
 
+################################################################################
 # Seed
+
 # Seed to obtain the fixed parameters #
 seed = 921  
+
 # Seed to perform the simulation #
 seed_sim = 2022
 
@@ -84,10 +87,13 @@ b = 25
 
 lista_simulacion = list()
 
+# Study parameters
+parameters = seq(from = 0, to = 1, length.out = 20)
+
 ################################################################################
 ## Fixed loop parameters ##
-
 set.seed(seed)
+
 ## Surveys ##
 
 # The surveys are fixed so the variance and bias can be calculated.
@@ -106,7 +112,7 @@ for (h in 1:b) {
 
 # Simulation
 
-# First, the seed of the simulation is chosen
+# First, we set the seed for the simulation
 set.seed(seed_sim)
 
 # Loop
@@ -144,7 +150,8 @@ for (w in 1:length(parameters)) {
     Nh_real = sum(Population$hidden_population) 
     
     Nh_basic_sum      = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum  = getNh_basicvis_sum(survey,N,vf_estimate) 
+    #Nh_basicvis_sum  = getNh_basicvis_sum(survey,N,vf_estimate)
+    
     Nh_basic_mean     = getNh_basic_mean(survey,N) 
     #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_estimate) 
     
@@ -162,11 +169,11 @@ for (w in 1:length(parameters)) {
     
     #Nh_GNSUM   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
     
-    #Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
-    #Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    #Nh_TEO     = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    #Nh_TEOvis  = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
     
-    #Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
-    #Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
+    #Nh_Zheng     = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_Zhengvis  = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
     
     
     

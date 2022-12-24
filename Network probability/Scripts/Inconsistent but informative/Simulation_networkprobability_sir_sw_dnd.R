@@ -4,46 +4,77 @@
 
 t = Sys.time()
 
+################################
+## Simulation data parameters ##
+################################
 
-N = 10000                   # Population size
-v_pop_prob = rep(1/10, 5)   # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
-                            # sum(v_pop_prob) < 1.
-n_pop = length(v_pop_prob)  # Number of subpopulations
+# Population size
+N = 10000
 
-hp_prob = 0.1               # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 500              # Number of individuals we draw in the survey
-n_survey_hp = 50            # Number of individuals we draw in the hidden population survey 
+# Probability of each subpopulation
+v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
 
-sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-memory_factor = 0         # reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1     # Visibility factor (Binomial's probability)
+# Number of subpopulations
+n_pop = length(v_pop_prob)   
 
-seed = 207                # Seed
-set.seed(seed)
+# Number of individuals we draw in the survey
+n_survey = 500                
 
-#Graph
-dim = 1     # Graph dimension 
-nei = 50    # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
-p   = 0.1   # Probability of randomize a connection. It is applied to all connections
+# Number of individuals we draw in the hidden population survey 
+n_survey_hp = 50              
 
+# Proportion of individuals in the hidden population
+hp_prob = 0.1 
 
+# Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0   
 
-# Study parameters
-parameters = seq(from = 0.05, to = 1, length.out = 50)
+# Visibility factor (Binomial's probability)
+visibility_factor = 1     
+
+#reach memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0            
 
 ################################################################################
-# AUXILIARY DATA FOR THE SIMULATION
+# Seed
+
+# Seed to obtain the fixed parameters #
+seed = 921  
+
+# Seed to perform the simulation #
+seed_sim = 2022
+
+################################################################################
+## Graph  properties ##
+
+# Graph dimension 
+dim = 1   
+# Number of neighbors per side that each node is connected to (2*nei neighbors) 
+nei = 50     
+# Probability of randomize a connection between nodes. It is applied to all connections
+p   = 0.1   
+
+################################################################################
+# Fixed population parameters #
+set.seed(seed)
 
 # Model network for the HP distribution
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
+# Fixed population parameters #
+set.seed(seed)
 # Subpopulation dataframe
 subpop_df = gen_Subpopulation(N, v_pop_prob)
+
+# Fixed population parameters #
+set.seed(seed)
+# Disjoint subpopulation dataframe
 subpop_disjoint_df = gen_Subpopulation_disjoint(N, v_pop_prob)
 
+# Fixed population parameters #
+set.seed(seed)
 # Hidden population distribution dataframe
-hp_df = gen_SIRpop(N, net_model ,beta = 0.115, gamma = 0.115/1.5, chosen_nodes = 1, n_iter = 5)
+hp_df = gen_SIRpop(N, net_model ,beta = 0.04, gamma = 0.015, chosen_nodes = 1, n_iter = 5)
 
 # Populations of reference
 Population_ref  = hp_df #Hidden population
@@ -52,12 +83,18 @@ Population_ref  = cbind(Population_ref, subpop_df) #Subpopulations
 Population_disjoint_ref = hp_df #Hidden Population
 Population_disjoint_ref  = cbind(Population_disjoint_ref, subpop_disjoint_df) #Subpopulations
 
-b = 100 #Number of iterations for the simulation
+b = 25 #Number of iterations for the simulation
 
 lista_simulacion = list()
 lista_simulacion_disjoint =list()
 
+# Study parameters
+parameters = seq(from = 0.05, to = 1, length.out = 50)
+
 ################################################################################
+
+## Fixed loop parameters ##
+set.seed(seed)
 
 ## Surveys ##
 
@@ -74,6 +111,9 @@ for (h in 1:b) {
 }
 
 ################################################################################
+
+# First, we set the seed for the simulation
+set.seed(seed_sim)
 
 #Simulation
 for (w in 1:length(parameters)) {
@@ -153,11 +193,11 @@ for (w in 1:length(parameters)) {
     Nh_MLE_mod  = getNh_MLE_mod(survey, v_pop_total, N)
     #Nh_MLE_modvis  = getNh_MLE_modvis(survey, v_pop_total, N, vf_estimate)
     
-    #Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
-    Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    #Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
     
-    #Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
-    Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
+    Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
     
     
     #Dataframe for saving the estimates
@@ -203,17 +243,17 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    #sim = cbind(sim, Nh_TEO = Nh_TEO)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
+    sim = cbind(sim, Nh_TEO = Nh_TEO)
+    names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
     
-    sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
+    #sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
     
-    #sim = cbind(sim, Nh_Zheng = Nh_Zheng)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
     
-    sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
+    #sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
     lista_sim[[l]] = sim
   }
@@ -263,11 +303,11 @@ for (w in 1:length(parameters)) {
     
     Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)
     
-    #Nh_TEO_disjoint    = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
-    Nh_TEOvis_disjoint    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    Nh_TEO_disjoint    = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    #Nh_TEOvis_disjoint    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
     
-    #Nh_Zheng_disjoint  = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
-    Nh_Zhengvis_disjoint  = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins =1000)
+    Nh_Zheng_disjoint  = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_Zhengvis_disjoint  = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins =1000)
     
     
     #Dataframe for saving the estimates
@@ -313,17 +353,17 @@ for (w in 1:length(parameters)) {
     #sim_disjoint = cbind(sim_disjoint,Nh_MLE_modvis = Nh_MLE_modvis_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint, Nh_TEO = Nh_TEO_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEO_",l)
+    sim_disjoint = cbind(sim_disjoint, Nh_TEO = Nh_TEO_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEO_",l)
     
-    sim_disjoint = cbind(sim_disjoint, Nh_TEOvis = Nh_TEOvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEOvis_",l)
+    #sim_disjoint = cbind(sim_disjoint, Nh_TEOvis = Nh_TEOvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEOvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint, Nh_Zheng = Nh_Zheng_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zheng_",l)
+    sim_disjoint = cbind(sim_disjoint, Nh_Zheng = Nh_Zheng_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zheng_",l)
     
-    sim_disjoint = cbind(sim_disjoint, Nh_Zhengvis = Nh_Zhengvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zhengvis_",l)
+    #sim_disjoint = cbind(sim_disjoint, Nh_Zhengvis = Nh_Zhengvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zhengvis_",l)
     
     lista_sim_disjoint[[l]] = sim_disjoint
   }
@@ -340,9 +380,8 @@ simulaciones_disjoint = bind_rows(lista_simulacion_disjoint)
 simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 
-
 ################################################################################
-file_name = str_c("Simulation_networkprobability_notdisjoint_", seed,".csv")
+file_name = str_c("Simulation_networkprobability_notdisjoint_sir_sw_", seed_sim,".csv")
 
 write.csv(simulaciones,                     # Data frame 
           file = file_name,                 # Csv name
@@ -352,7 +391,7 @@ write.csv(simulaciones,                     # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_networkprobability_disjoint_", seed,".csv")
+file_name_disjoint = str_c("Simulation_networkprobability_disjoint_sir_sw_", seed_sim,".csv")
 
 write.csv(simulaciones_disjoint,            # Data frame 
           file = file_name_disjoint,        # Csv name

@@ -2,38 +2,55 @@
 # Simulation based on the value of the memory factor of the subpopulations, leaving the rest of parameters fixed
 ################################################################################################################
 
+
 t = Sys.time()
 
-################ WARNING #########################################################
-# IT IS IMPORTANT TO LEAVE THIS FACTOR AS 0, SINCE THE FIRST POPULATION THAT WE ARE 
-# GOING TO BUILD WILL BE A BASIS FOR THE REST
-sub_memory_factor = 0      #Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+# Population size
+N = 10000
+
+# Probability of each subpopulation
+v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
+
+# Number of subpopulations
+n_pop = length(v_pop_prob)   
+
+# Number of individuals we draw in the survey
+n_survey = 500                
+
+# Number of individuals we draw in the hidden population survey 
+n_survey_hp = 50              
+
+# Proportion of individuals in the hidden population
+hp_prob = 0.1 
+
+# Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0   
+
+# Visibility factor (Binomial's probability)
+visibility_factor = 1     
+
+#reach memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0            
+
+# Seed
+# Seed to obtain the fixed parameters #
+seed = 921  
+# Seed to perform the simulation #
+seed_sim = 2022
+
 ################################################################################
+## Graph  properties ##
 
-N = 10000                     # Population size
-v_pop_prob = rep(1/10, 5)     # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
-n_pop = length(v_pop_prob)    # Number of subpopulations
-# sum(v_pop_prob) < 1. 
-hp_prob = 0.1                 # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 500                # Number of individuals we draw in the survey
-n_survey_hp = 50              # Number of individuals we draw in the hidden population survey 
+# Graph dimension 
+dim = 1   
+# Number of neighbors per side that each node is connected to (2*nei neighbors) 
+nei = 50     
+# Probability of randomize a connection between nodes. It is applied to all connections
+p   = 0.1   
 
-memory_factor = 0             # reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1         # Visibility factor (Binomial's probability)
-
-
-seed = 207                    # Seed
+################################################################################
+# Fixed population parameters #
 set.seed(seed)
-
-
-#Graph
-dim = 1    # Graph dimension 
-nei = 50   # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
-p   = 0.1  # Probability of randomize a connection. It is applied to all connections
-
-
-###############################################################################################################################################################
 
 # Network
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
@@ -68,12 +85,15 @@ simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of iterations for the simulation
-b = 10
+b = 25
 
 lista_simulacion          = list()
 lista_simulacion_disjoint = list()
 
 ################################################################################
+
+# Fixed population parameters #
+set.seed(seed)
 
 ## Surveys ##
 
@@ -90,6 +110,9 @@ for (h in 1:b) {
 }
 
 ################################################################################
+
+# First, the seed of the simulation is chosen
+set.seed(seed_sim)
 
 # Simulation
 
@@ -354,7 +377,7 @@ simulaciones_disjoint["data"] = parameters
 
 
 ################################################################################
-file_name = str_c("Simulation_subpopulationmemoryfactor_notdisjoint_", seed, ".csv")
+file_name = str_c("Simulation_subpopulationmemoryfactor_notdisjoint_uniform_sw_", seed_sim, ".csv")
 write.csv(simulaciones,                         # Data frame
           file = file_name,                     # Csv's name
           row.names = TRUE )                    # Row names: TRUE o FALSE 
@@ -362,7 +385,7 @@ write.csv(simulaciones,                         # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_subpopulationmemoryfactor_disjoint_", seed,".csv")
+file_name_disjoint = str_c("Simulation_subpopulationmemoryfactor_disjoint_uniform_sw_", seed_sim,".csv")
 write.csv(simulaciones_disjoint,                # Data frame
           file = file_name_disjoint,            # Csv's name
           row.names = TRUE )                    # Row names: TRUE o FALSE 
@@ -373,7 +396,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_subpopulationmemoryfactor_", seed, ".png")
+plot_name = str_c("Network_subpopulationmemoryfactor_uniform_sw_", seed, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)

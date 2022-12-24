@@ -145,6 +145,7 @@ for (w in 1:length(parameters)) {
     
     Nh_basic_sum      = getNh_basic_sum(survey,N) 
     #Nh_basicvis_sum  = getNh_basicvis_sum(survey,N,vf_estimate) 
+    
     Nh_basic_mean     = getNh_basic_mean(survey,N) 
     #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_estimate) 
     

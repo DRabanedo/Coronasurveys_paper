@@ -1,73 +1,84 @@
-##########################################################################################
-# Simulation based on the value of the survey's size, leaving the rest of parameters fixed
-##########################################################################################
+################################################################################################################
+# Simulation based on the value of the memory factor of the reach variable, leaving the rest of parameters fixed
+################################################################################################################
 
 t = Sys.time()
 
+# Population size
+N = 10000
 
-N = 10000                      # Population size
+# Probability of each subpopulation
+v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
 
-v_pop_prob =  rep(1/10, 5)    # Probability of each subpopulation
-n_pop = length(v_pop_prob)    # Number of subpopulations
+# Number of subpopulations
+n_pop = length(v_pop_prob)   
 
-hp_prob = 0.1                 # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 500                # Number of individuals we draw in the survey
-n_survey_hp = 50              # Number of individuals we draw in the hidden population survey 
+# Number of individuals we draw in the survey
+n_survey = 500                
 
-sub_memory_factor = 0         # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-memory_factor = 0             # Reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1         # Visibility factor (Binomial's probability)
-seed = 207                    # Seed
+# Number of individuals we draw in the hidden population survey 
+n_survey_hp = 50              
+
+# Proportion of individuals in the hidden population
+hp_prob = 0.1 
+
+# Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0   
+
+# Visibility factor (Binomial's probability)
+visibility_factor = 1     
+
+#reach memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0            
+
+# Seed
+# Seed to obtain the fixed parameters #
+seed = 921  
+# Seed to perform the simulation #
+seed_sim = 2022
+
+################################################################################
+## Graph  properties ##
+
+# Graph dimension 
+dim = 1   
+# Number of neighbors per side that each node is connected to (2*nei neighbors) 
+nei = 50     
+# Probability of randomize a connection between nodes. It is applied to all connections
+p   = 0.1   
+
+################################################################################
+# Fixed population parameters #
 set.seed(seed)
 
-#Graph
-dim = 1    # Graph dimension 
-nei = 50   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
-p   = 0.1  # Probability of randomize a connection. It is applied to all connections
-
-
-
-
-################################################################################
-
-# Network
+# Network model #
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
+## Populations models ##
 # Not disjoint population #
+Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model, seed = seed)
 
-Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model)
+net_sw     = Graph_population_matrix[[1]]   # Population´s graph
+Population = Graph_population_matrix[[2]]   # Population
+Mhp_vis    = Graph_population_matrix[[3]]   # Population's visibility matrix
 
-net_sw     = Graph_population_matrix[[1]]      # PopulationÂ´s graph
-Population = Graph_population_matrix[[2]]      # Population
-Mhp_vis    = Graph_population_matrix[[3]]      # Population's visibility matrix
-
-#Vector with the number of people in each subpopulation
-
+# Population number
 v_pop_total = getV_pop(n_pop, Population)
 
-################################################################################
-
-# Disjoint population #
-
-Population_disjoint = gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
-
-v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 ################################################################################
 
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 100 
+b = 25 
 
 # Study parameters
-parameters    = round(seq(from = 1, to = N, length.out = 20))
-parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 20))
-
-simulaciones = data.frame(data = parameters)
-simulaciones_disjoint = data.frame(data = parameters)
+parameters    = round(seq(from = 1, to = N, length.out = 40))
+parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 40))
 
 ################################################################################
+
+set.seed(seed_sim)
 
 #Simulation
 
@@ -359,7 +370,7 @@ for (l in 1:b) {
 
 
 ################################################################################
-file_name = str_c("Simulation_surveysize_notdisjoint", seed,".csv")
+file_name = str_c("Simulation_surveysize_notdisjoint_sir_sw_", seed_sim,".csv")
 write.csv(simulaciones,                      # Data frame
           file = file_name,                  # CSV name
           row.names = FALSE )                 # row names: TRUE or FALSE 
@@ -368,7 +379,7 @@ write.csv(simulaciones,                      # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_surveysize_disjoint", seed,".csv")
+file_name_disjoint = str_c("Simulation_surveysize_disjoint_sir_sw_", seed_sim,".csv")
 write.csv(simulaciones_disjoint,              # Data frame
           file = file_name_disjoint,          # CSV name
           row.names = FALSE )                  # row names: TRUE or FALSE 

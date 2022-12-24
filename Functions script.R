@@ -628,7 +628,7 @@ gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_m
 }
 
 # Epidemic data distribution
-gen_Data_SIR = function(n, prob_vect, vis_factor, mem_factor, sub_mem_factor, beta = 0.115, gamma = 0.115/1.5, chosen_nodes = 1, n_iter = 5, net, seed){
+gen_Data_SIR = function(n, prob_vect, vis_factor, mem_factor, sub_mem_factor, beta = 0.04, gamma = 0.015, chosen_nodes = 1, n_iter = 5, net, seed){
   # list, contains the network, the population data and the matrix for the GNSUM
   
   # N:  Population size

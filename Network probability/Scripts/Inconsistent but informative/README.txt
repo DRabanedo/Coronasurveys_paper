@@ -1,0 +1,3 @@
+This simulation is inconsistent as we are changing the network structure in each iteration. The SIR distribution of the hidden population remains constant so it does not represent the real SIR distribution on each step, only in the correspondant to the model generated parameters. This analysis cannot be propery done, as the impact of the SIR distribution is not clearly shown.
+
+This problem does not appear in the uniform model due to the hp distribution, as it does not depend on the network structure (the SIR model does).
