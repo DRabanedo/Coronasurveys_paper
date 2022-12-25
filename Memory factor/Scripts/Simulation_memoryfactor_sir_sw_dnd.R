@@ -239,7 +239,7 @@ simulaciones = bind_rows(lista_simulacion)
 simulaciones["data"] = parameters
 
 ################################################################################
-file_name = str_c("Simulations_memoryfactor_sir_sw_", seed_sim,".csv")
+file_name = str_c("Simulations_memoryfactor_sir_sw_pop1_", seed_sim,".csv")
 write.csv(simulaciones,               # Data frame 
           file = file_name,           # Csv name
           row.names = TRUE )          # Row names: TRUE or FALSE 
@@ -251,7 +251,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_memoryfactor_sir_sw_", seed_sim, ".png")
+plot_name = str_c("Network_memoryfactor_sir_sw_pop1_", seed_sim, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)
