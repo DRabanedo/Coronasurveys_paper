@@ -4,37 +4,58 @@
 
 t = Sys.time()
 
-N = 10000                 # Population size
-v_pop_prob = rep(1/10,5)  # Probability of each subpopulation. sum(v_pop_prob) < 1
-n_pop = length(v_pop_prob)
+# Population size
+N = 1000
 
-hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 500            # Number of individuals we draw in the survey
-n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
+# Probability of each subpopulation
+v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
 
+# Number of subpopulations
+n_pop = length(v_pop_prob)   
 
-sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1     # Visibility factor (Binomial's probability)
+# Number of individuals we draw in the survey
+n_survey = 500                
 
-seed = 207                # Seed
-set.seed(seed)
+# Number of individuals we draw in the hidden population survey 
+n_survey_hp = 50              
 
-#Graph
-dim = 1    # Graph dimension 
-nei = 50   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
-p   = 0.1  # Probability of randomize a connection. It is applied to all connections
+# Proportion of individuals in the hidden population
+hp_prob = 0.1 
 
+# Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0   
+
+# Visibility factor (Binomial's probability)
+visibility_factor = 1     
+
+#reach memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0            
+
+# Seed
+# Seed to obtain the fixed parameters #
+seed = 921  
+# Seed to perform the simulation #
+seed_sim = 2022
 
 ################################################################################
+## Graph  properties ##
 
+# Graph dimension 
+dim = 1   
+# Number of neighbors per side that each node is connected to (2*nei neighbors) 
+nei = 50     
+# Probability of randomize a connection between nodes. It is applied to all connections
+p   = 0.1   
+
+################################################################################
+# Fixed population parameters #
+set.seed(seed)
 # Network
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 ## Populations ##
 # Not disjoint population #
-Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model)
+Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model, seed = seed)
 
 net_sw     = Graph_population_matrix[[1]]   # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
@@ -45,7 +66,7 @@ v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
-Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
+Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey, seed = seed)
 
 # Population number (disjoint)
 v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
@@ -62,7 +83,7 @@ simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of simulations
-b = 100
+b = 25
 
 #Variable creation
 lista_simulacion = list()
@@ -72,6 +93,10 @@ lista_simulacion_disjoint = list()
 lista_sim_disjoint = list()
 
 ################################################################################
+
+# Fixed population parameters #
+set.seed(seed)
+
 ## Surveys ##
 
 # The surveys are fixed so the variance and bias can be calculated.
@@ -86,16 +111,38 @@ for (h in 1:b) {
   list_surveys_hp[[h]] = gen_Survey(n_survey_hp, Population[Population$hidden_population == 1,])
 }
 
+# Fixed population parameters #
+set.seed(seed)
+
+list_subpopulations = list()
+for (i in 1:length(parameters)){
+  n_pop = parameters[i]
+  v_pop_prob = c(rep(0.75/n_pop, n_pop))
+  
+  list_subpopulations[[i]] = gen_Subpopulation(N, v_pop_prob)
+}
+
+
+# Fixed population parameters #
+set.seed(seed)
+
+list_subpopulations_disjoint = list()
+for (i in 1:length(parameters)){
+  n_pop = parameters[i]
+  v_pop_prob = c(rep(0.75/n_pop, n_pop))
+  
+  list_subpopulations_disjoint[[i]] = gen_Subpopulation_disjoint(N, v_pop_prob)
+}
 
 ################################################################################
+# First, the seed of the simulation is chosen
+set.seed(seed_sim)
 
 # Simulation 
 for (w in 1:length(parameters)) {
-  n_pop = parameters[w]
-  v_pop_prob = c(rep(0.75/n_pop, n_pop))
   
   population_buc  = data.frame(hidden_population = Population$hidden_population)
-  population_buc  = cbind(population_buc, gen_Subpopulation(N, v_pop_prob)) #Subpopulations
+  population_buc  = cbind(population_buc, list_subpopulations[[w]])
   population_buc  = cbind(population_buc, reach = Population$reach)
   population_buc  = cbind(population_buc, reach_memory = Population$reach_memory)
   population_buc  = cbind(population_buc, hp_total = Population$hp_total) 
@@ -112,7 +159,7 @@ for (w in 1:length(parameters)) {
   # Disjoint population #
   
   population_disjoint_buc  = data.frame(hidden_population = Population_disjoint$hidden_population)
-  population_disjoint_buc  = cbind(population_disjoint_buc, gen_Subpopulation_disjoint(N, v_pop_prob))
+  population_disjoint_buc  = cbind(population_disjoint_buc, list_subpopulations_disjoint[[w]])
   population_disjoint_buc  = cbind(population_disjoint_buc, reach = Population_disjoint$reach)
   population_disjoint_buc  = cbind(population_disjoint_buc, reach_memory = Population_disjoint$reach_memory)
   population_disjoint_buc  = cbind(population_disjoint_buc, hp_total = Population_disjoint$hp_total) 
@@ -360,7 +407,7 @@ simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 
 ################################################################################
-file_name = str_c("Simulation_subpopulationnumber_notdisjoint", seed,".csv")
+file_name = str_c("Simulation_subpopulationnumber_notdisjoint_sw_sir_pop1_", seed_sim,".csv")
 write.csv(simulaciones,                      # Data frame
           file = file_name,                  # CSV name
           row.names = FALSE )                 # row names: TRUE or FALSE 
@@ -369,7 +416,7 @@ write.csv(simulaciones,                      # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_subpopulationnumber_disjoint", seed,".csv")
+file_name_disjoint = str_c("Simulation_subpopulationnumber_disjoint_sw_sir_pop1_", seed_sim,".csv")
 write.csv(simulaciones_disjoint,              # Data frame
           file = file_name_disjoint,          # CSV name
           row.names = FALSE )                  # row names: TRUE or FALSE 
