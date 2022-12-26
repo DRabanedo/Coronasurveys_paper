@@ -55,11 +55,6 @@ nei = 50
 p   = 0.1   
 
 ################################################################################
-# Fixed population parameters #
-set.seed(seed)
-
-# Model network for the HP distribution
-net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 # Fixed population parameters #
 set.seed(seed)
