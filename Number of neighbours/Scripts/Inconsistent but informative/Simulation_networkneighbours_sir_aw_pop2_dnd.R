@@ -93,6 +93,9 @@ parameters = round(seq(from = 1, to = 100, length.out = 20))
 
 ################################################################################
 
+# Fixed population parameters #
+set.seed(seed)
+
 ## Surveys ##
 
 # The surveys are fixed so the variance and bias can be calculated.
@@ -107,23 +110,33 @@ for (h in 1:b) {
   list_surveys_hp[[h]] = gen_Survey(n_survey_hp, Population_ref[Population_ref$hidden_population == 1,])
 }
 
+## Fixed loop parameters ##
+set.seed(seed)
+
+# Loop network 
+net_sw_list = list()
+for (i in 1:length(parameters)){
+  nei = parameters[i]
+  net_sw_list[[i]] = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
+}
+
 ################################################################################
 
 # First, we set the seed for the simulation
 set.seed(seed_sim)
 
-#Simulations
+#Simulation
 for (w in 1:length(parameters)) {
+  # Loop network 
   nei = parameters[w]
-  # New network creation
-  net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
+  net_sw = net_sw_list[[w]]
   
   # Not disjoint population #
   Population = Population_ref
   
   # Matrix representing the directed graph that connects individuals with the people of the Hidden Population they know 
   Mhp = matrixHP(net_sw,Population)
-  Mhp_vis =  apply(Mhp,c(1,2), berHP, p = visibility_factor)
+  Mhp_vis =  matrixHP_visibility(Mhp, visibility_factor)
   
   Population  = cbind(Population, gen_Reach(net_sw)) #Reach variable
   Population  = cbind(Population, gen_Reach_hp(Mhp)) # HP reach variable

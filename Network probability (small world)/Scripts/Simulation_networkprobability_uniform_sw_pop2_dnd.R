@@ -109,6 +109,16 @@ for (h in 1:b) {
   list_surveys_hp[[h]] = gen_Survey(n_survey_hp, Population_ref[Population_ref$hidden_population == 1,])
 }
 
+## Fixed loop parameters ##
+set.seed(seed)
+
+# Loop network 
+net_sw_list = list()
+for (i in 1:length(parameters)){
+  p = parameters[i]
+  net_sw_list[[i]] = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
+}
+
 ################################################################################
 
 # First, we set the seed for the simulation
@@ -118,7 +128,7 @@ set.seed(seed_sim)
 for (w in 1:length(parameters)) {
   # Loop network 
   p = parameters[w]
-  net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
+  net_sw = net_sw_list[[w]]
   
   # Not disjoint population #
   Population = Population_ref
