@@ -5,10 +5,10 @@
 t = Sys.time()
 
 # Population size
-N = 1000
+N = 10000
 
 # Probability of each subpopulation
-v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
+v_pop_prob = c(rep(0.02,10), rep(0.04, 5), 0.08, 0.08, 0.16)
 
 # Number of subpopulations
 n_pop = length(v_pop_prob)   
@@ -50,12 +50,13 @@ p   = 0.1
 ################################################################################
 # Fixed population parameters #
 set.seed(seed)
+
 # Network
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 ## Populations ##
 # Not disjoint population #
-Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model, seed = seed)
+Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model)
 
 net_sw     = Graph_population_matrix[[1]]   # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
@@ -66,7 +67,7 @@ v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
-Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey, seed = seed)
+Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
 
 # Population number (disjoint)
 v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
@@ -83,7 +84,7 @@ simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of simulations
-b = 25
+b = 100
 
 #Variable creation
 lista_simulacion = list()
@@ -140,6 +141,8 @@ set.seed(seed_sim)
 
 # Simulation 
 for (w in 1:length(parameters)) {
+  n_pop = parameters[w]
+  v_pop_prob = c(rep(0.75/n_pop, n_pop))
   
   population_buc  = data.frame(hidden_population = Population$hidden_population)
   population_buc  = cbind(population_buc, list_subpopulations[[w]])
@@ -171,7 +174,6 @@ for (w in 1:length(parameters)) {
   
   # Population number (disjoint)
   v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
-  
   
   ###########################
   ## Not disjoint analysis ##
@@ -218,7 +220,6 @@ for (w in 1:length(parameters)) {
     
     Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
     #Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
-    
     
     #Dataframe for saving the estimates
     sim = data.frame(Nh_real = Nh_real)
@@ -276,7 +277,6 @@ for (w in 1:length(parameters)) {
     sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
     names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
-    
     lista_sim[[l]] = sim
   }
   simulacion = bind_cols(lista_sim)
@@ -317,7 +317,7 @@ for (w in 1:length(parameters)) {
     #Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_estimate)
     
     Nh_MLE_disjoint      = getNh_MLE(survey, v_pop_total_disjoint)
-    #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_estimate) 
+    #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_estimate)
     
     Nh_MLE_mod_disjoint      = getNh_MLE_mod(survey, v_pop_total_disjoint, N)
     #Nh_MLE_modvis_disjoint  = getNh_MLE_modvis(survey, v_pop_total_disjoint, N, vf_estimate)
@@ -407,7 +407,7 @@ simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 
 ################################################################################
-file_name = str_c("Simulation_subpopulationnumber_notdisjoint_sw_sir_pop1_", seed_sim,".csv")
+file_name = str_c("Simulation_subpopulationnumber_notdisjoint_uniform_sw_pop1_", seed_sim,".csv")
 write.csv(simulaciones,                      # Data frame
           file = file_name,                  # CSV name
           row.names = FALSE )                 # row names: TRUE or FALSE 
@@ -416,7 +416,7 @@ write.csv(simulaciones,                      # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_subpopulationnumber_disjoint_sw_sir_pop1_", seed_sim,".csv")
+file_name_disjoint = str_c("Simulation_subpopulationnumber_disjoint_uniform_sw_pop1_", seed_sim,".csv")
 write.csv(simulaciones_disjoint,              # Data frame
           file = file_name_disjoint,          # CSV name
           row.names = FALSE )                  # row names: TRUE or FALSE 
@@ -428,7 +428,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_numbersubpopulations_", seed, ".png")
+plot_name = str_c("Network_numbersubpopulations_uniform_sw_pop1_", seed, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)
