@@ -1,6 +1,6 @@
-##########################################################################################
-# Simulation based on the value of the survey's size, leaving the rest of parameters fixed
-##########################################################################################
+################################################################################################################
+# Simulation based on the value of the memory factor of the reach variable, leaving the rest of parameters fixed
+################################################################################################################
 
 t = Sys.time()
 
@@ -8,7 +8,7 @@ t = Sys.time()
 N = 10000
 
 # Probability of each subpopulation
-v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
+v_pop_prob = c(rep(0.02,10), rep(0.04, 5), 0.08, 0.08, 0.16)
 
 # Number of subpopulations
 n_pop = length(v_pop_prob)   
@@ -51,28 +51,20 @@ p   = 0.1
 # Fixed population parameters #
 set.seed(seed)
 
-# Network
+# Network model #
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
+## Populations models ##
 # Not disjoint population #
+Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model, seed = seed)
 
-Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model, seed = seed)
+net_sw     = Graph_population_matrix[[1]]   # Population´s graph
+Population = Graph_population_matrix[[2]]   # Population
+Mhp_vis    = Graph_population_matrix[[3]]   # Population's visibility matrix
 
-net_sw     = Graph_population_matrix[[1]]      # PopulationÂ´s graph
-Population = Graph_population_matrix[[2]]      # Population
-Mhp_vis    = Graph_population_matrix[[3]]      # Population's visibility matrix
-
-#Vector with the number of people in each subpopulation
-
+# Population number
 v_pop_total = getV_pop(n_pop, Population)
 
-################################################################################
-
-# Disjoint population #
-
-Population_disjoint = gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey, seed = seed)
-
-v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 ################################################################################
 
 ## Auxiliar simulation data ##
@@ -84,8 +76,6 @@ b = 20
 parameters    = round(seq(from = 1, to = N, length.out = 15))
 parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 15))
 
-simulaciones = data.frame(data = parameters)
-simulaciones_disjoint = data.frame(data = parameters)
 
 # Fixed population parameters #
 set.seed(seed)
@@ -105,7 +95,7 @@ for (i in 1:length(parameters)){
 }
 
 ################################################################################
-# First, the seed of the simulation is chosen
+
 set.seed(seed_sim)
 
 #Simulation
@@ -134,13 +124,14 @@ for (l in 1:b) {
   Nh_MoS = rep(NA,length(parameters)) 
   #Nh_MoSvis = rep(NA,length(parameters)) 
   
-  Nh_GNSUM = rep(NA,length(parameters))  
+  Nh_GNSUM = rep(NA,length(parameters))
   
   Nh_TEO      = rep(NA,length(parameters))
   #Nh_TEOvis    = rep(NA,length(parameters))
   
   Nh_Zheng    = rep(NA,length(parameters))
   #Nh_Zhengvis   = rep(NA,length(parameters))
+  
   
   Nh_Direct = rep(NA,length(parameters))
   
@@ -176,6 +167,7 @@ for (l in 1:b) {
   
   Nh_Zheng_disjoint     = rep(NA,length(parameters))
   #Nh_Zhengvis_disjoint   = rep(NA,length(parameters))
+  
   
   Nh_Direct_disjoint = rep(NA,length(parameters))
   
@@ -228,6 +220,7 @@ for (l in 1:b) {
     
     Nh_Zheng[i]    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
     #Nh_Zhengvis[i]   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
+    
     
     Nh_Direct[i] = getNh_Direct(survey, N)
     
@@ -320,7 +313,6 @@ for (l in 1:b) {
   #simulaciones = cbind(simulaciones,Nh_Zhengvis = Nh_Zhengvis)
   #names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_Zhengvis_",l)
   
-  
   simulaciones = cbind(simulaciones,Nh_Direct = Nh_Direct)
   names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_Direct_",l)
   
@@ -381,16 +373,19 @@ for (l in 1:b) {
   #simulaciones_disjoint = cbind(simulaciones_disjoint,Nh_Zhengvis = Nh_Zhengvis_disjoint)
   #names(simulaciones_disjoint)[dim(simulaciones_disjoint)[2]] = str_c("Nh_Zhengvis_",l)
   
-  
   simulaciones_disjoint = cbind(simulaciones_disjoint,Nh_Direct = Nh_Direct_disjoint)
   names(simulaciones_disjoint)[dim(simulaciones_disjoint)[2]] = str_c("Nh_Direct_",l)
+  
   
   print(l)
   
 }
 
+
+
+
 ################################################################################
-file_name = str_c("Simulation_surveysize_notdisjoint_uniform_sw_", seed_sim,".csv")
+file_name = str_c("Simulation_surveysize_notdisjoint_sir_sw_pop1_", seed_sim,".csv")
 write.csv(simulaciones,                      # Data frame
           file = file_name,                  # CSV name
           row.names = FALSE )                 # row names: TRUE or FALSE 
@@ -399,7 +394,7 @@ write.csv(simulaciones,                      # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_surveysize_disjoint_uniform_sw_", seed_sim,".csv")
+file_name_disjoint = str_c("Simulation_surveysize_disjoint_sir_sw_pop1_", seed_sim,".csv")
 write.csv(simulaciones_disjoint,              # Data frame
           file = file_name_disjoint,          # CSV name
           row.names = FALSE )                  # row names: TRUE or FALSE 
@@ -411,7 +406,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_surveysize_uniform_sw_", seed, ".png")
+plot_name = str_c("Network_surveysize_sir_sw_", seed, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)

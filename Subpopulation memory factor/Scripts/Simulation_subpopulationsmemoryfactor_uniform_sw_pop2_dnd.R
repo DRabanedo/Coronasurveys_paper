@@ -236,17 +236,17 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    #sim = cbind(sim, Nh_TEO = Nh_TEO)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
+    sim = cbind(sim, Nh_TEO = Nh_TEO)
+    names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
     
-    sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
+    #sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
     
-    #sim = cbind(sim, Nh_Zheng = Nh_Zheng)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
     
-    sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
+    #sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
     lista_sim[[l]] = sim
   }
