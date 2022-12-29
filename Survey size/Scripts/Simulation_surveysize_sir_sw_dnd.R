@@ -70,11 +70,29 @@ v_pop_total = getV_pop(n_pop, Population)
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 25 
+b = 20 
 
 # Study parameters
-parameters    = round(seq(from = 1, to = N, length.out = 40))
-parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 40))
+parameters    = round(seq(from = 1, to = N, length.out = 15))
+parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 15))
+
+
+# Fixed population parameters #
+set.seed(seed)
+
+list_survey = list()
+for (i in 1:length(parameters)){
+  list_survey[[i]] = gen_Survey(parameters[i], Population)
+}
+
+
+# Fixed population parameters #
+set.seed(seed)
+
+list_survey_hp = list()
+for (i in 1:length(parameters)){
+  list_survey_hp[[i]] = gen_Survey(parameters_hp[i], Population[Population$hidden_population == 1,])
+}
 
 ################################################################################
 
@@ -144,11 +162,11 @@ for (l in 1:b) {
   
   Nh_GNSUM_disjoint = rep(NA,length(parameters))
   
-  #Nh_TEO_disjoint      = rep(NA,length(parameters))
-  Nh_TEOvis_disjoint    = rep(NA,length(parameters))
+  Nh_TEO_disjoint      = rep(NA,length(parameters))
+  #Nh_TEOvis_disjoint    = rep(NA,length(parameters))
   
-  #Nh_Zheng_disjoint     = rep(NA,length(parameters))
-  Nh_Zhengvis_disjoint   = rep(NA,length(parameters))
+  Nh_Zheng_disjoint     = rep(NA,length(parameters))
+  #Nh_Zhengvis_disjoint   = rep(NA,length(parameters))
   
   
   Nh_Direct_disjoint = rep(NA,length(parameters))
@@ -157,22 +175,19 @@ for (l in 1:b) {
   for (i in 1:length(parameters)) {
     
     #Surveys variation
-    survey_pop = gen_Survey(parameters[i], Population)
-    survey = Population[survey_pop,]
+    survey = Population[list_survey[[i]],]
     #Hidden's population survey
-    survey_hp_pop  = gen_Survey(parameters_hp[i], Population[Population$hidden_population == 1,])
-    survey_hp      = Population[Population$hidden_population == 1,][survey_hp_pop,]
+    survey_hp = Population[Population$hidden_population == 1,][list_survey_hp[[i]],]
     
     #Surveys variation
-    survey_disjoint = Population_disjoint[survey_pop,]
-    
-    survey_hp_disjoint = Population_disjoint[Population_disjoint$hidden_population == 1,][survey_hp_pop,]
+    survey_disjoint = Population_disjoint[list_survey[[i]],]
+    survey_hp_disjoint = Population_disjoint[Population_disjoint$hidden_population == 1,][list_survey_hp[[i]],]
     
     
     #Visibility factor estimate
     # Population for the VF estimate
     Population_vf = gen_Survey_VF(sum(Population$hidden_population), Population, Mhp_vis, memory_factor)
-    survey_hp_vf  = Population_vf[survey_hp_pop,]
+    survey_hp_vf  = Population_vf[list_survey_hp[[i]],]
     
     vf_estimate = VF_Estimate(survey_hp_vf)
     vf_estimate_disjoint = vf_estimate

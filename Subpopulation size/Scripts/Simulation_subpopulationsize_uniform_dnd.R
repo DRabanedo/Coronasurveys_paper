@@ -2,36 +2,56 @@
 # Simulation based on the size of subpopulations, leaving the rest of parameters fixed
 ######################################################################################
 
+
 t = Sys.time()
 
 
-N = 10000                  # Population size
+# Population size
+N = 10000
 
-v_pop_prob =  rep(1/10, 5) # Probability of each subpopulation
-n_pop = length(v_pop_prob) # Number of subpopulations
+# Probability of each subpopulation
+v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
 
-hp_prob = 0.1              # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 500             # Number of individuals we draw in the survey
-n_survey_hp = 50           # Number of individuals we draw in the hidden population survey 
+# Number of subpopulations
+n_pop = length(v_pop_prob)   
 
-sub_memory_factor = 0      # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-memory_factor = 0          # Reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1      # Visibility factor (Binomial's probability)
-seed = 207                 # Seed
-set.seed(seed)
+# Number of individuals we draw in the survey
+n_survey = 500                
 
+# Number of individuals we draw in the hidden population survey 
+n_survey_hp = 50              
 
-#Graph
-dim = 1    # Graph dimension 
-nei = 50   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
-p   = 0.1  # Probability of randomize a connection. It is applied to all connections
+# Proportion of individuals in the hidden population
+hp_prob = 0.1 
 
+# Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0   
 
-# Study parameters
-parameters = list(rep(0.1,5), c(0.2, 0.1, 0.05, 0.05, 0.05, 0.05), c(0.4, rep(0.025, 4)), rep(0.05, 10), c(0.15, 0.1, 0.05, 0.2), c(0.15, 0.125, 0.1, 0.075, 0.05), rep(0.05, 5), c(0.5, 0.025, 0.025, 0.025, 0.025), c(rep(0.02,10), rep(0.04, 5), 0.08, 0.08, 0.16))
+# Visibility factor (Binomial's probability)
+visibility_factor = 1     
+
+#reach memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0            
+
+# Seed
+# Seed to obtain the fixed parameters #
+seed = 921  
+# Seed to perform the simulation #
+seed_sim = 2022
 
 ################################################################################
+## Graph  properties ##
+
+# Graph dimension 
+dim = 1   
+# Number of neighbors per side that each node is connected to (2*nei neighbors) 
+nei = 50     
+# Probability of randomize a connection between nodes. It is applied to all connections
+p   = 0.1   
+
+################################################################################
+# Fixed population parameters #
+set.seed(seed)
 
 # Network
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
@@ -39,7 +59,7 @@ net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 ## Populations ##
 # Not disjoint population #
 
-Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model)
+Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model,  seed = seed)
 
 net_sw = Graph_population_matrix[[1]]       # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
@@ -53,7 +73,7 @@ v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
-Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
+Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey,  seed = seed)
 
 v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 ################################################################################
@@ -61,7 +81,7 @@ v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 100 
+b = 20
 
 # Variable creation
 lista_simulacion = list()
@@ -72,6 +92,10 @@ lista_sim_disjoint = list()
 
 
 ################################################################################
+
+# Fixed population parameters #
+set.seed(seed)
+
 #Surveys
 
 # The surveys are fixed so the variance and bias can be calculated.
@@ -85,7 +109,29 @@ list_surveys_hp = list()
 for (h in 1:b) {
   list_surveys_hp[[h]] = gen_Survey(n_survey_hp, Population[Population$hidden_population == 1,])
 }
+
+# Fixed population parameters #
+set.seed(seed)
+
+list_subpopulations = list()
+for (i in 1:length(parameters)){
+  v_pop_prob = parameters[[i]]
+  list_subpopulations[[i]] = gen_Subpopulation(N, v_pop_prob)
+}
+
+
+# Fixed population parameters #
+set.seed(seed)
+
+list_subpopulations_disjoint = list()
+for (i in 1:length(parameters)){
+  v_pop_prob = parameters[[i]]
+  list_subpopulations_disjoint[[i]] = gen_Subpopulation_disjoint(N, v_pop_prob)
+}
+
 ################################################################################
+# Fixed population parameters #
+set.seed(seed_sim)
 
 #Simulation
 
@@ -97,10 +143,8 @@ for (w in 1:length(parameters)) {
   
   
   # Not disjoint population loop #
-  subpop_df = gen_Subpopulation(N, v_pop_prob)
-  
   population_buc  = data.frame(hidden_population = Population$hidden_population) #Hidden population
-  population_buc  = cbind(population_buc, subpop_df) #Subpopulations
+  population_buc  = cbind(population_buc, list_subpopulations[[w]]) #Subpopulations
   population_buc  = cbind(population_buc, reach = Population$reach) #Reach variable
   population_buc  = cbind(population_buc, hp_total = Population$hp_total) # HP reach variable
   population_buc  = cbind(population_buc, hp_survey = Population$hp_survey) # HP reach recall error variable
@@ -115,10 +159,8 @@ for (w in 1:length(parameters)) {
   
   
   # Disjoint population loop #
-  subpop_disjoint_df = gen_Subpopulation(N, v_pop_prob)
-  
   population_buc_disjoint  = data.frame(hidden_population = Population_disjoint$hidden_population) #Hidden population
-  population_buc_disjoint  = cbind(population_buc_disjoint, subpop_disjoint_df) #Subpopulations
+  population_buc_disjoint  = cbind(population_buc_disjoint, list_subpopulations_disjoint[[w]]) #Subpopulations
   population_buc_disjoint  = cbind(population_buc_disjoint, reach = Population_disjoint$reach) #Reach variable
   population_buc_disjoint  = cbind(population_buc_disjoint, hp_total = Population_disjoint$hp_total) # HP reach variable
   population_buc_disjoint  = cbind(population_buc_disjoint, hp_survey = Population_disjoint$hp_survey) # HP reach recall error variable
@@ -331,17 +373,17 @@ for (w in 1:length(parameters)) {
     #sim_disjoint = cbind(sim_disjoint,Nh_MLE_modvis = Nh_MLE_modvis_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint, Nh_TEO = Nh_TEO_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEO_",l)
+    sim_disjoint = cbind(sim_disjoint, Nh_TEO = Nh_TEO_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEO_",l)
     
-    sim_disjoint = cbind(sim_disjoint, Nh_TEOvis = Nh_TEOvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEOvis_",l)
+    #sim_disjoint = cbind(sim_disjoint, Nh_TEOvis = Nh_TEOvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_TEOvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint, Nh_Zheng = Nh_Zheng_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zheng_",l)
+    sim_disjoint = cbind(sim_disjoint, Nh_Zheng = Nh_Zheng_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zheng_",l)
     
-    sim_disjoint = cbind(sim_disjoint, Nh_Zhengvis = Nh_Zhengvis_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zhengvis_",l)
+    #sim_disjoint = cbind(sim_disjoint, Nh_Zhengvis = Nh_Zhengvis_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Zhengvis_",l)
     
     
     lista_sim_disjoint[[l]] = sim_disjoint
@@ -360,21 +402,31 @@ simulaciones_disjoint = bind_rows(lista_simulacion_disjoint)
 simulaciones_disjoint = cbind(simulaciones_disjoint, data = 1:length(parameters))
 
 ################################################################################
-file_name = str_c("Simulations_subpopulationsize_notdisjoint_", seed,".csv")
+file_name = str_c("Simulations_subpopulationsize_notdisjoint_uniform_sw_", seed_sim,".csv")
 write.csv(simulaciones,                 # Data frame
           file = file_name,             # CSV name
           row.names = FALSE )           # Row names: TRUE or FALSE
 ################################################################################
 
 ################################################################################
-file_name_disjoint = str_c("Simulations_subpopulationsize_disjoint_", seed,".csv")
-write.csv(simulaciones,                    # Data frame
+file_name_disjoint = str_c("Simulations_subpopulationsize_disjoint_uniform_sw_", seed_sim,".csv")
+write.csv(simulaciones_disjoint,                    # Data frame
           file = file_name_disjoint,       # CSV name
           row.names = FALSE )              # Row names: TRUE or FALSE
 ################################################################################
 
 timer = Sys.time() - t
 timer
+
+####################### Network analysis #######################################
+###### Links to the hidden population distribution & Degree distribution #######
+plot_name = str_c("Network_subpopulationsize_uniform_sw_", seed, ".png")
+
+png(filename = plot_name,
+    width = 1000, height = 1000)
+net_analysis(net_sw, Population, p, 2*nei)
+dev.off()
+
 
 #################### COMPUTATION TIME ANALYSIS #############################
 # Computation time (N=10000) (office PC)

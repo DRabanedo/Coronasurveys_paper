@@ -77,13 +77,13 @@ Population_ref  = cbind(Population_ref, subpop_df) #Subpopulations
 Population_disjoint_ref = hp_df #Hidden Population
 Population_disjoint_ref  = cbind(Population_disjoint_ref, subpop_disjoint_df) #Subpopulations
 
-b = 25 #Number of iterations for the simulation
+b = 20 #Number of iterations for the simulation
 
 lista_simulacion = list()
 lista_simulacion_disjoint =list()
 
 # Study parameters
-parameters = round(seq(from = 5, to = 100, length.out = 20))
+parameters = round(seq(from = 5, to = 100, length.out = 15))
 
 
 ################################################################################

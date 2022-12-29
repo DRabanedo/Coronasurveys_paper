@@ -5,33 +5,52 @@
 t = Sys.time()
 
 
-N = 10000                  # Population size
+# Population size
+N = 10000
 
-v_pop_prob =  rep(1/10, 5) # Probability of each subpopulation
-n_pop = length(v_pop_prob) # Number of subpopulations
+# Probability of each subpopulation
+v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
 
-hp_prob = 0.1              # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 500             # Number of individuals we draw in the survey
-n_survey_hp = 50           # Number of individuals we draw in the hidden population survey 
+# Number of subpopulations
+n_pop = length(v_pop_prob)   
 
-sub_memory_factor = 0      # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-memory_factor = 0          # Reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1      # Visibility factor (Binomial's probability)
-seed = 207                 # Seed
-set.seed(seed)
+# Number of individuals we draw in the survey
+n_survey = 500                
 
+# Number of individuals we draw in the hidden population survey 
+n_survey_hp = 50              
 
-#Graph
-dim = 1    # Graph dimension 
-nei = 50   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
-p   = 0.1  # Probability of randomize a connection. It is applied to all connections
+# Proportion of individuals in the hidden population
+hp_prob = 0.1 
 
+# Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0   
 
-# Study parameters
-parameters = list(rep(0.1,5), c(0.2, 0.1, 0.05, 0.05, 0.05, 0.05), c(0.4, rep(0.025, 4)), rep(0.05, 10), c(0.15, 0.1, 0.05, 0.2), c(0.15, 0.125, 0.1, 0.075, 0.05), rep(0.05, 5), c(0.5, 0.025, 0.025, 0.025, 0.025), c(rep(0.02,10), rep(0.04, 5), 0.08, 0.08, 0.16))
+# Visibility factor (Binomial's probability)
+visibility_factor = 1     
+
+#reach memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0            
+
+# Seed
+# Seed to obtain the fixed parameters #
+seed = 921  
+# Seed to perform the simulation #
+seed_sim = 2022
 
 ################################################################################
+## Graph  properties ##
+
+# Graph dimension 
+dim = 1   
+# Number of neighbors per side that each node is connected to (2*nei neighbors) 
+nei = 50     
+# Probability of randomize a connection between nodes. It is applied to all connections
+p   = 0.1   
+
+################################################################################
+# Fixed population parameters #
+set.seed(seed)
 
 # Network
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
@@ -39,7 +58,7 @@ net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 ## Populations ##
 # Not disjoint population #
 
-Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model)
+Graph_population_matrix = gen_Data_SIR(N, v_pop_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model,  seed = seed)
 
 net_sw = Graph_population_matrix[[1]]       # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
@@ -53,15 +72,17 @@ v_pop_total = getV_pop(n_pop, Population)
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 100 
+b = 20
 
 # Variable creation
 lista_simulacion = list()
 lista_sim = list()
 
 ################################################################################
-#Surveys
+# Fixed population parameters #
+set.seed(seed)
 
+#Surveys
 # The surveys are fixed so the variance and bias can be calculated.
 
 list_surveys = list()
@@ -73,7 +94,22 @@ list_surveys_hp = list()
 for (h in 1:b) {
   list_surveys_hp[[h]] = gen_Survey(n_survey_hp, Population[Population$hidden_population == 1,])
 }
+
+
+# Fixed population parameters #
+set.seed(seed)
+
+list_subpopulations = list()
+for (i in 1:length(parameters)){
+  v_pop_prob = parameters[[i]]
+  list_subpopulations[[i]] = gen_Subpopulation(N, v_pop_prob)
+}
+
+parameters = list(rep(0.1,5), c(0.2, 0.1, 0.05, 0.05, 0.05, 0.05), c(0.4, rep(0.025, 4)), rep(0.05, 10), c(0.15, 0.1, 0.05, 0.2), c(0.15, 0.125, 0.1, 0.075, 0.05), rep(0.05, 5), c(0.5, 0.025, 0.025, 0.025, 0.025), c(rep(0.02,10), rep(0.04, 5), 0.08, 0.08, 0.16))
+
 ################################################################################
+# Fixed population parameters #
+set.seed(seed_sim)
 
 #Simulation
 
@@ -85,10 +121,9 @@ for (w in 1:length(parameters)) {
   
   
   # Not disjoint population loop #
-  subpop_df = gen_Subpopulation(N, v_pop_prob)
-  
+
   population_buc  = data.frame(hidden_population = Population$hidden_population) #Hidden population
-  population_buc  = cbind(population_buc, subpop_df) #Subpopulations
+  population_buc  = cbind(population_buc, list_subpopulations[[w]]) #Subpopulations
   population_buc  = cbind(population_buc, reach = Population$reach) #Reach variable
   population_buc  = cbind(population_buc, hp_total = Population$hp_total) # HP reach variable
   population_buc  = cbind(population_buc, hp_survey = Population$hp_survey) # HP reach recall error variable
@@ -138,11 +173,11 @@ for (w in 1:length(parameters)) {
     
     Nh_GNSUM    = getNh_GNSUM(survey, survey_hp, v_pop_total, N)   
     
-    #Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
-    Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
+    Nh_TEO      = getNh_TEO(survey, v_pop_prob, N, iter = 1000)
+    #Nh_TEOvis    = getNh_TEOvis(survey, v_pop_prob, N, vf_est = vf_estimate, iter = 1000)
     
-    #Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
-    Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
+    Nh_Zheng    = getNh_Zheng(survey, v_pop_prob, N, iterations = 5000, burnins =1000)
+    #Nh_Zhengvis   = getNh_Zhengvis(survey, v_pop_prob, N, vf_est = vf_estimate, iterations = 5000, burnins = 1000)
     
     
     #Dataframe for saving the estimates
@@ -214,7 +249,7 @@ simulaciones = cbind(simulaciones, data = 1:length(parameters))
 
 
 ################################################################################
-file_name = str_c("Simulations_subpopulationsize_notdisjoint_", seed,".csv")
+file_name = str_c("Simulations_subpopulationsize_notdisjoint_d_sir_sw_", seed_sim,".csv")
 write.csv(simulaciones,                 # Data frame
           file = file_name,             # CSV name
           row.names = FALSE )           # Row names: TRUE or FALSE
@@ -223,6 +258,16 @@ write.csv(simulaciones,                 # Data frame
 
 timer = Sys.time() - t
 timer
+
+####################### Network analysis #######################################
+###### Links to the hidden population distribution & Degree distribution #######
+plot_name = str_c("Simulations_subpopulationsize_notdisjoint_d_sir_sw_", seed, ".png")
+
+png(filename = plot_name,
+    width = 1000, height = 1000)
+net_analysis(net_sw, Population, p, 2*nei)
+dev.off()
+
 
 #################### COMPUTATION TIME ANALYSIS #############################
 # Computation time (N=10000) (office PC)

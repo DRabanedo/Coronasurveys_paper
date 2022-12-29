@@ -70,7 +70,7 @@ v_pop_total = getV_pop(n_pop, Population)
 ## Auxiliary data for the simulation ##
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 20)
+parameters = seq(from = 0, to = 1, length.out = 15)
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -82,7 +82,7 @@ vect_hp_vis   =  rep(NA, nrow(Population))
 vect_reach_re =  rep(NA, nrow(Population))
 
 #Number of iterations for the simulation
-b = 25
+b = 20
 
 lista_simulacion = list()
 

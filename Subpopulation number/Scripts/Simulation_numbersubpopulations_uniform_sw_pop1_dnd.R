@@ -56,7 +56,7 @@ net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 ## Populations ##
 # Not disjoint population #
-Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model)
+Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model, seed = seed)
 
 net_sw     = Graph_population_matrix[[1]]   # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
@@ -67,7 +67,7 @@ v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
-Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
+Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey, seed = seed)
 
 # Population number (disjoint)
 v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
@@ -77,14 +77,14 @@ v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 # Auxiliary simulation data
 
 # Study parameters
-parameters = round(seq(from = 1, to = 20, length.out = 20))
+parameters = round(seq(from = 1, to = 20, length.out = 15))
 
 #Dataframe to save the data
 simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of simulations
-b = 100
+b = 20
 
 #Variable creation
 lista_simulacion = list()
@@ -265,17 +265,17 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    #sim = cbind(sim, Nh_TEO = Nh_TEO)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
+    sim = cbind(sim, Nh_TEO = Nh_TEO)
+    names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
     
-    sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
+    #sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
     
-    #sim = cbind(sim, Nh_Zheng = Nh_Zheng)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
     
-    sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
+    #sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
     lista_sim[[l]] = sim
   }

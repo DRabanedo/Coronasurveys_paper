@@ -76,14 +76,14 @@ v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 # Auxiliary simulation data
 
 # Study parameters
-parameters = round(seq(from = 1, to = 20, length.out = 20))
+parameters = round(seq(from = 1, to = 20, length.out = 15))
 
 #Dataframe to save the data
 simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of simulations
-b = 25
+b = 20
 
 #Variable creation
 lista_simulacion = list()
@@ -266,17 +266,17 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MLE_modvis = Nh_MLE_modvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MLE_modvis_",l)
     
-    #sim = cbind(sim, Nh_TEO = Nh_TEO)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
+    sim = cbind(sim, Nh_TEO = Nh_TEO)
+    names(sim)[dim(sim)[2]] = str_c("Nh_TEO_",l)
     
-    sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
+    #sim = cbind(sim, Nh_TEOvis = Nh_TEOvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_TEOvis_",l)
     
-    #sim = cbind(sim, Nh_Zheng = Nh_Zheng)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
+    sim = cbind(sim, Nh_Zheng = Nh_Zheng)
+    names(sim)[dim(sim)[2]] = str_c("Nh_Zheng_",l)
     
-    sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
+    #sim = cbind(sim, Nh_Zhengvis = Nh_Zhengvis)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_Zhengvis_",l)
     
     
     lista_sim[[l]] = sim

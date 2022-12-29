@@ -4,39 +4,59 @@
 
 t = Sys.time()
 
+# Population size
+N = 10000
 
-N = 10000                      # Population size
+# Probability of each subpopulation
+v_pop_prob = c(0.150, 0.150, 0.125, 0.100,0.075, 0.050, 0.050)    
 
-v_pop_prob =  rep(1/10, 5)    # Probability of each subpopulation
-n_pop = length(v_pop_prob)    # Number of subpopulations
+# Number of subpopulations
+n_pop = length(v_pop_prob)   
 
-hp_prob = 0.1                 # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 500                # Number of individuals we draw in the survey
-n_survey_hp = 50              # Number of individuals we draw in the hidden population survey 
+# Number of individuals we draw in the survey
+n_survey = 500                
 
-sub_memory_factor = 0         # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-memory_factor = 0             # Reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1         # Visibility factor (Binomial's probability)
-seed = 207                    # Seed
-set.seed(seed)
+# Number of individuals we draw in the hidden population survey 
+n_survey_hp = 50              
 
-#Graph
-dim = 1    # Graph dimension 
-nei = 50   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
-p   = 0.1  # Probability of randomize a connection. It is applied to all connections
+# Proportion of individuals in the hidden population
+hp_prob = 0.1 
 
+# Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0   
 
+# Visibility factor (Binomial's probability)
+visibility_factor = 1     
 
+#reach memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0            
+
+# Seed
+# Seed to obtain the fixed parameters #
+seed = 921  
+# Seed to perform the simulation #
+seed_sim = 2022
 
 ################################################################################
+## Graph  properties ##
+
+# Graph dimension 
+dim = 1   
+# Number of neighbors per side that each node is connected to (2*nei neighbors) 
+nei = 50     
+# Probability of randomize a connection between nodes. It is applied to all connections
+p   = 0.1   
+
+################################################################################
+# Fixed population parameters #
+set.seed(seed)
 
 # Network
 net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 # Not disjoint population #
 
-Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model)
+Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model, seed = seed)
 
 net_sw     = Graph_population_matrix[[1]]      # PopulationÂ´s graph
 Population = Graph_population_matrix[[2]]      # Population
@@ -50,7 +70,7 @@ v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
-Population_disjoint = gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
+Population_disjoint = gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey, seed = seed)
 
 v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 ################################################################################
@@ -58,16 +78,35 @@ v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 100 
+b = 20 
 
 # Study parameters
-parameters    = round(seq(from = 1, to = N, length.out = 20))
-parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 20))
+parameters    = round(seq(from = 1, to = N, length.out = 15))
+parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 15))
 
 simulaciones = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
+# Fixed population parameters #
+set.seed(seed)
+
+list_survey = list()
+for (i in 1:length(parameters)){
+  list_survey[[i]] = gen_Survey(parameters[i], Population)
+}
+
+
+# Fixed population parameters #
+set.seed(seed)
+
+list_survey_hp = list()
+for (i in 1:length(parameters)){
+  list_survey_hp[[i]] = gen_Survey(parameters_hp[i], Population[Population$hidden_population == 1,])
+}
+
 ################################################################################
+# First, the seed of the simulation is chosen
+set.seed(seed_sim)
 
 #Simulation
 
@@ -132,11 +171,11 @@ for (l in 1:b) {
   
   Nh_GNSUM_disjoint = rep(NA,length(parameters))
   
-  #Nh_TEO_disjoint      = rep(NA,length(parameters))
-  Nh_TEOvis_disjoint    = rep(NA,length(parameters))
+  Nh_TEO_disjoint      = rep(NA,length(parameters))
+  #Nh_TEOvis_disjoint    = rep(NA,length(parameters))
   
-  #Nh_Zheng_disjoint     = rep(NA,length(parameters))
-  Nh_Zhengvis_disjoint   = rep(NA,length(parameters))
+  Nh_Zheng_disjoint     = rep(NA,length(parameters))
+  #Nh_Zhengvis_disjoint   = rep(NA,length(parameters))
   
   Nh_Direct_disjoint = rep(NA,length(parameters))
   
@@ -144,22 +183,19 @@ for (l in 1:b) {
   for (i in 1:length(parameters)) {
     
     #Surveys variation
-    survey_pop = gen_Survey(parameters[i], Population)
-    survey = Population[survey_pop,]
+    survey = Population[list_survey[[i]],]
     #Hidden's population survey
-    survey_hp_pop  = gen_Survey(parameters_hp[i], Population[Population$hidden_population == 1,])
-    survey_hp      = Population[Population$hidden_population == 1,][survey_hp_pop,]
+    survey_hp = Population[Population$hidden_population == 1,][list_survey_hp[[i]],]
     
     #Surveys variation
-    survey_disjoint = Population_disjoint[survey_pop,]
-    
-    survey_hp_disjoint = Population_disjoint[Population_disjoint$hidden_population == 1,][survey_hp_pop,]
+    survey_disjoint = Population_disjoint[list_survey[[i]],]
+    survey_hp_disjoint = Population_disjoint[Population_disjoint$hidden_population == 1,][list_survey_hp[[i]],]
     
     
     #Visibility factor estimate
     # Population for the VF estimate
     Population_vf = gen_Survey_VF(sum(Population$hidden_population), Population, Mhp_vis, memory_factor)
-    survey_hp_vf  = Population_vf[survey_hp_pop,]
+    survey_hp_vf  = Population_vf[list_survey_hp[[i]],]
     
     vf_estimate = VF_Estimate(survey_hp_vf)
     vf_estimate_disjoint = vf_estimate
@@ -354,7 +390,7 @@ for (l in 1:b) {
 }
 
 ################################################################################
-file_name = str_c("Simulation_surveysize_notdisjoint", seed,".csv")
+file_name = str_c("Simulation_surveysize_notdisjoint_uniform_sw_", seed_sim,".csv")
 write.csv(simulaciones,                      # Data frame
           file = file_name,                  # CSV name
           row.names = FALSE )                 # row names: TRUE or FALSE 
@@ -363,7 +399,7 @@ write.csv(simulaciones,                      # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_surveysize_disjoint", seed,".csv")
+file_name_disjoint = str_c("Simulation_surveysize_disjoint_uniform_sw_", seed_sim,".csv")
 write.csv(simulaciones_disjoint,              # Data frame
           file = file_name_disjoint,          # CSV name
           row.names = FALSE )                  # row names: TRUE or FALSE 
@@ -375,7 +411,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_surveysize_", seed, ".png")
+plot_name = str_c("Network_surveysize_uniform_sw_", seed, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)

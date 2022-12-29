@@ -56,7 +56,7 @@ net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 
 ## Populations ##
 # Not disjoint population #
-Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model)
+Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor,sub_memory_factor, net = net_model, seed = seed)
 
 net_sw     = Graph_population_matrix[[1]]   # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
@@ -71,13 +71,13 @@ v_pop_total = getV_pop(n_pop, Population)
 # Auxiliary simulation data
 
 # Study parameters
-parameters = round(seq(from = 1, to = 20, length.out = 20))
+parameters = round(seq(from = 1, to = 20, length.out = 15))
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
 
 #Number of simulations
-b = 25
+b = 20
 
 #Variable creation
 lista_simulacion = list()
