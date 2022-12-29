@@ -78,14 +78,14 @@ v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 # Auxiliary simulation data #
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 15)
+parameters = seq(from = 0, to = 1, length.out = 10)
 
 #Dataframe to save the data
 simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of iterations for the simulation
-b = 20
+b = 15
 
 lista_simulacion          = list()
 lista_simulacion_disjoint = list()

@@ -70,11 +70,11 @@ v_pop_total = getV_pop(n_pop, Population)
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 20 
+b = 15
 
 # Study parameters
-parameters    = round(seq(from = 1, to = N, length.out = 15))
-parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 15))
+parameters    = round(seq(from = 1, to = N, length.out = 10))
+parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 10))
 
 
 # Fixed population parameters #

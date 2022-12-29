@@ -83,12 +83,12 @@ vect_hp_vis   =  rep(NA, nrow(Population))
 vect_reach_re =  rep(NA, nrow(Population))
 
 #Number of iterations for the simulation
-b = 20
+b = 15
 
 lista_simulacion = list()
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 15)
+parameters = seq(from = 0, to = 1, length.out = 10)
 
 ################################################################################
 ## Fixed loop parameters ##

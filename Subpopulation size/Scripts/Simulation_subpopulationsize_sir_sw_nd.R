@@ -72,7 +72,7 @@ v_pop_total = getV_pop(n_pop, Population)
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 20
+b = 15
 
 # Variable creation
 lista_simulacion = list()
