@@ -68,7 +68,7 @@ subpop_disjoint_df = gen_Subpopulation_disjoint(N, v_pop_prob)
 # Fixed population parameters #
 set.seed(seed)
 # Hidden population distribution dataframe
-hp_df = gen_HP(n, prob_hp)
+hp_df = gen_HP(N, hp_prob)
 
 # Populations of reference
 Population_ref  = hp_df #Hidden population
