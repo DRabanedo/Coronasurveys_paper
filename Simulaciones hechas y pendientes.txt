@@ -1,4 +1,4 @@
 Simulaciones realizadas
 * Memory factor small world SIR
 * Memory factor small world uniform
-
+* Network probability uniform 
