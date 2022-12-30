@@ -405,5 +405,5 @@ dev.off()
 
 #################### COMPUTATION TIME ANALYSIS ###########################
 # Computation time (N=10000) (virtual machine) 
-# timer -> 
+# timer -> 20.90012 hours
 ###########################################################################
