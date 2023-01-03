@@ -65,6 +65,12 @@ Mhp_vis    = Graph_population_matrix[[3]]   # Population's visibility matrix
 # Population number
 v_pop_total = getV_pop(n_pop, Population)
 
+# Disjoint population
+Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey,  seed = seed)
+
+# Population number (disjoint)
+v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
+
 ################################################################################
 
 ## Auxiliar simulation data ##
@@ -94,6 +100,8 @@ for (i in 1:length(parameters)){
   list_survey_hp[[i]] = gen_Survey(parameters_hp[i], Population[Population$hidden_population == 1,])
 }
 
+simulaciones = data.frame(data = parameters, data2 = parameters_hp)
+simulaciones_disjoint = data.frame(data = parameters, data2 = parameters_hp)
 ################################################################################
 
 set.seed(seed_sim)
@@ -246,7 +254,7 @@ for (l in 1:b) {
     Nh_MoS_disjoint[i] = getNh_MoS(survey_disjoint, v_pop_total_disjoint, N)
     #Nh_MoSvis_disjoint[i] = getNh_MoSvis(survey_disjoint, v_pop_total_disjoint, N, vf_estimate_disjoint)
     
-    Nh_GNSUM_disjoint[i] =  getNh_GNSUM(survey_disjoint, survey_disjoint_hp, v_pop_total_disjoint, N)
+    Nh_GNSUM_disjoint[i] =  getNh_GNSUM(survey_disjoint, survey_hp_disjoint, v_pop_total_disjoint, N)
     
     Nh_TEO_disjoint[i]    = getNh_TEO(survey_disjoint, v_pop_prob, N, iter = 1000)
     #Nh_TEOvis_disjoint[i]    = getNh_TEOvis(survey_disjoint, v_pop_prob, N, iter = 1000)

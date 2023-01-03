@@ -13,8 +13,9 @@ library(dplyr)        #
 library(truncnorm)    #
 library(gridExtra)    #
 library(cowplot)      #
+library(matrixStats)  #
 library(rjags)        #
-#library(asbio)        #
+#library(asbio)       #
 #######################
 
 rinvchisq <- function (n, df, scale = 1/df) 
