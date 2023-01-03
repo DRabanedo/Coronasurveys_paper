@@ -13,6 +13,7 @@ library(dplyr)        #
 library(truncnorm)    #
 library(gridExtra)    #
 library(cowplot)      #
+library(matrixStats)  #
 library(rjags)        #
 #library(asbio)       #
 #######################
