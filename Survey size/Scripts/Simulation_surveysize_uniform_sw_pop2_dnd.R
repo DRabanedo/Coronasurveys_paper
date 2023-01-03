@@ -68,11 +68,12 @@ v_pop_total = getV_pop(n_pop, Population)
 
 ################################################################################
 
-# Disjoint population #
+# Disjoint population
+Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey,  seed = seed)
 
-Population_disjoint = gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey, seed = seed)
+# Population number (disjoint)
+v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 
-v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 ################################################################################
 
 ## Auxiliar simulation data ##
@@ -84,8 +85,9 @@ b = 15
 parameters    = round(seq(from = 1, to = N, length.out = 10))
 parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 10))
 
-simulaciones = data.frame(data = parameters)
-simulaciones_disjoint = data.frame(data = parameters)
+simulaciones = data.frame(data = parameters, data2 = parameters_hp)
+simulaciones_disjoint = data.frame(data = parameters, data2 = parameters_hp)
+
 
 # Fixed population parameters #
 set.seed(seed)
@@ -420,5 +422,5 @@ dev.off()
 
 #################### COMPUTATION TIME ANALYSIS ###########################
 # Computation time (N=10000) (virtual machine)
-#timer ->  1.112204 hours
+#timer ->  
 ###########################################################################

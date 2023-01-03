@@ -65,6 +65,7 @@ Mhp_vis    = Graph_population_matrix[[3]]   # Population's visibility matrix
 # Population number
 v_pop_total = getV_pop(n_pop, Population)
 
+# Disjoint population
 Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey,  seed = seed)
 
 # Population number (disjoint)
@@ -76,7 +77,7 @@ v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 2 
+b = 15 
 
 # Study parameters
 parameters    = round(seq(from = 10, to = N, length.out = 10))
@@ -423,5 +424,5 @@ dev.off()
 
 #################### COMPUTATION TIME ANALYSIS ###########################
 # Computation time (N=10000) (virtual machine)
-#timer ->  1.112204 hours
+#timer ->  
 ###########################################################################
