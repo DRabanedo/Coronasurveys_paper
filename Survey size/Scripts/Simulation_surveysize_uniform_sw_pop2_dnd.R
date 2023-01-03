@@ -255,7 +255,7 @@ for (l in 1:b) {
     Nh_MoS_disjoint[i] = getNh_MoS(survey_disjoint, v_pop_total_disjoint, N)
     #Nh_MoSvis_disjoint[i] = getNh_MoSvis(survey_disjoint, v_pop_total_disjoint, N, vf_estimate_disjoint)
     
-    Nh_GNSUM_disjoint[i] =  getNh_GNSUM(survey_disjoint, survey_disjoint_hp, v_pop_total_disjoint, N)
+    Nh_GNSUM_disjoint[i] =  getNh_GNSUM(survey_disjoint, survey_hp_disjoint, v_pop_total_disjoint, N)
     
     Nh_TEO_disjoint[i]    = getNh_TEO(survey_disjoint, v_pop_prob, N, iter = 1000)
     #Nh_TEOvis_disjoint[i]    = getNh_TEOvis(survey_disjoint, v_pop_prob, N, iter = 1000)
