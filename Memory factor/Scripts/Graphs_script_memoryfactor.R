@@ -6,7 +6,7 @@
 # Data import
 
 setwd("C:/Users/David Rabanedo/Documents/GitHub/Coronasurveys_paper/Memory factor/Graphs")
-simulation_data = read.csv("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Memory factor/CSV/Simulations_memoryfactor_207.csv")
+simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Memory factor/CSV/Simulations_memoryfactor_uniform_sw_2022.csv", header=T)
 
 seed_number = "207"
 
@@ -22,7 +22,7 @@ graph_data_abserror = gen_graph_df(simulation_data, 'abserror')
 
 # Graph creation
 
-plot_name = str_c("Simulation_memoryfactor_", seed_number, "_notdisjoint_abserror.png")
+plot_name = str_c("Simulation_memoryfactor_", seed_number, "_notdisjoint_abserror.jpg")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -180,5 +180,3 @@ ggplot(graph_data_median) +
        y = "Median")
 
 dev.off()
-
-getwd()

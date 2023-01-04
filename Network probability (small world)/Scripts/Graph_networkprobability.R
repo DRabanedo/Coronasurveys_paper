@@ -11,13 +11,12 @@ library(stringr)
 
 ######################
 # Data import
-simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Network probability/CSV/Simulation_networkprobability_notdisjoint_2023.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Network probability/CSV/Simulation_networkprobability_disjoint_2023.csv")
+setwd("~/GitHub/Coronasurveys_paper/Network probability (small world)/Graphs")
 
+simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Network probability (small world)/CSV/Simulation_networkprobability_notdisjoint_uniform_sw_pop1_2022.csv")
+simulation_data_disjoint = read.csv("~/GitHub/Coronasurveys_paper/Network probability (small world)/CSV/Simulation_networkprobability_disjoint_uniform_sw_pop1_2022.csv")
 
-seed_number = "2023"
-getwd()
-
+seed_number = "2022"
 
 ################################################################################
 
@@ -55,13 +54,22 @@ ggplot(graph_data_abserror) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
   
   scale_color_discrete("Legend") + 
+  
   labs(title = "Simulations based on the network probability",
        subtitle = sub_title,
        x = "Network probability",
@@ -99,10 +107,19 @@ ggplot(graph_data_abserror_disjoint) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -132,11 +149,6 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_abserror_total) + 
-  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
-  
-  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
   
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
@@ -150,10 +162,25 @@ ggplot(graph_data_abserror_total) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
@@ -161,10 +188,19 @@ ggplot(graph_data_abserror_total) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +  
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -210,11 +246,19 @@ ggplot(graph_data_mse) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -241,6 +285,7 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_mse_disjoint) + 
+  
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
   
@@ -253,10 +298,19 @@ ggplot(graph_data_mse_disjoint) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +    
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -286,12 +340,6 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_mse_total) + 
-  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
-  
-  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
-  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
@@ -304,10 +352,25 @@ ggplot(graph_data_mse_total) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
@@ -315,10 +378,19 @@ ggplot(graph_data_mse_total) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +    
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -367,10 +439,19 @@ ggplot(graph_data_bias) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
   
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
@@ -401,6 +482,7 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_bias_disjoint) + 
+
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
   
@@ -413,10 +495,19 @@ ggplot(graph_data_bias_disjoint) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +   
   
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
@@ -448,12 +539,6 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_bias_total) + 
-  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
-  
-  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
-  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
@@ -466,10 +551,25 @@ ggplot(graph_data_bias_total) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
@@ -477,10 +577,19 @@ ggplot(graph_data_bias_total) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +   
   
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) + 
   
@@ -532,11 +641,19 @@ ggplot(graph_data_sd) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -576,10 +693,19 @@ ggplot(graph_data_sd_disjoint) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +     
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -609,12 +735,6 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_sd_total) + 
-  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
-  
-  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
-  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
@@ -627,10 +747,25 @@ ggplot(graph_data_sd_total) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
@@ -638,10 +773,19 @@ ggplot(graph_data_sd_total) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +   
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -693,11 +837,19 @@ ggplot(graph_data_median) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -724,7 +876,6 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_median_disjoint) +
-  
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
@@ -739,10 +890,19 @@ ggplot(graph_data_median_disjoint) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +   
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
@@ -775,12 +935,6 @@ png(filename = plot_name,
 ggplot(graph_data_median_total) + 
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
-  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
-  
-  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
-  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
@@ -793,10 +947,25 @@ ggplot(graph_data_median_total) +
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod, col = "Nh_MLEmod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis, col = "Nh_MLEvismod")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  geom_line(aes(x = data, y =  Nh_TEO, col = "Nh_TEO")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis, col = "Nh_TEOvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng, col = "Nh_Zheng")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis, col = "Nh_Zhengvis")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
@@ -804,11 +973,19 @@ ggplot(graph_data_median_total) +
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
+  geom_line(aes(x = data, y =  Nh_MLEmod_disjoint, col = "Nh_MLEmod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEmodvis_disjoint, col = "Nh_MLEvismod_disjoint")) + 
+  
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
+  geom_line(aes(x = data, y =  Nh_TEO_disjoint, col = "Nh_TEO_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_TEOvis_disjoint, col = "Nh_TEOvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_Zheng_disjoint, col = "Nh_Zheng_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_Zhengvis_disjoint, col = "Nh_Zhengvis_disjoint")) +   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the network probability",
        subtitle = sub_title,
