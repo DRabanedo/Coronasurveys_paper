@@ -4,3 +4,5 @@ Simulaciones realizadas
 * Network probability uniform 
 * Number subpopulations uniform small world pop1 dnd
 * Number subpopulations uniform small world pop1 nd
+* Subpopulation memory faactor SIR
+* Subpopulation memory factor Uniform

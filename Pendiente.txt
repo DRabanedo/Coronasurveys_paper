@@ -1,5 +1,4 @@
-* Boxplot de los errores (analizar bien las subpoblaciones (usar modelos 2 (normal) y 3 (Antonio))
-* Incluir MLE mod
+* Boxplot de los errores (hacer gráficas)
 * Mirar papers de survey y distribuciones
 * Hacer Barabasi (ver impacto)
 * 
