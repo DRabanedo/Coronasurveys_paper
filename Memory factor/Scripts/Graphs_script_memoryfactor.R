@@ -13,47 +13,14 @@ seed_number = "207"
 ################################################################################
 ################################################################################
 
-## Not disjoint ##
-
-Nh_real_dataframe = select(simulation_data, starts_with("Nh_real"))
-
-Nh_basic_sum_dataframe = select(simulation_data, starts_with("Nh_basic_sum"))
-#Nh_basicvis_sum_dataframe = select(simulation_data, starts_with("Nh_basicvis_sum"))
-
-Nh_basic_mean_dataframe = select(simulation_data, starts_with("Nh_basic_mean"))
-#Nh_basicvis_mean_dataframe = select(simulation_data, starts_with("Nh_basicvis_mean"))
-
-
-########################### Data analysis ######################################
-
-# This way of presenting the data allows us to carry out a more detailed analysis
-# of each estimator.
-
-Nh_basic_sum_analysis      = data_analysis(Nh_basic_sum_dataframe, Nh_real_dataframe)
-#Nh_basicvis_sum_analysis  = data_analysis(Nh_basicvis_sum_dataframe, Nh_real_dataframe)
-
-Nh_basic_mean_analysis     = data_analysis(Nh_basic_mean_dataframe, Nh_real_dataframe)
-#Nh_basicvis_mean_analysis = data_analysis(Nh_basicvis_mean_dataframe, Nh_real_dataframe)
-
-
-################################################################################
-
-####### Graph representation #######
-# The graphic representation allows us to compare the different results obtained
-# by each one of the estimators
-
-##### Absolute error #####
+# Absolute error #
 
 # Dataframe creation #
 
-graph_data_abserror = data.frame(data = simulation_data$data)
-
-graph_data_abserror = cbind(graph_data_abserror, Nh_basic_sum =  Nh_basic_sum_analysis$abserror)
-#graph_data_abserror = cbind(graph_data_abserror, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$abserror)
-graph_data_abserror = cbind(graph_data_abserror, Nh_basic_mean =  Nh_basic_mean_analysis$abserror)
-# graph_data_abserror = cbind(graph_data_abserror, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$abserror)
+graph_data_abserror = gen_graph_df(simulation_data, 'abserror')
 
 
+# Graph creation
 
 plot_name = str_c("Simulation_memoryfactor_", seed_number, "_notdisjoint_abserror.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
@@ -84,12 +51,7 @@ dev.off()
 
 # Dataframe creation #
 
-graph_data_mse = data.frame( data = simulation_data$data)
-
-graph_data_mse = cbind(graph_data_mse, Nh_basic_sum =  Nh_basic_sum_analysis$mse)
-#graph_data_mse = cbind(graph_data_mse, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$mse)
-graph_data_mse = cbind(graph_data_mse, Nh_basic_mean =  Nh_basic_mean_analysis$mse)
-#graph_data_mse = cbind(graph_data_mse, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$mse)
+graph_data_mse = gen_graph_df(simulation_data, 'mse')
 
 
 # Graph creation
@@ -121,15 +83,7 @@ dev.off()
 
 ###### Bias analysis ######
 
-# Dataframe creation #
-
-graph_data_bias = data.frame( data = simulation_data$data)
-
-graph_data_bias = cbind(graph_data_bias, Nh_real =  simulation_data$Nh_real_1)
-graph_data_bias = cbind(graph_data_bias, Nh_basic_sum =  Nh_basic_sum_analysis$bias)
-#graph_data_bias = cbind(graph_data_bias, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$bias)
-graph_data_bias = cbind(graph_data_bias, Nh_basic_mean =  Nh_basic_mean_analysis$bias)
-#graph_data_bias = cbind(graph_data_bias, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$bias)
+graph_data_bias = gen_graph_df(simulation_data, 'bias')
 
 
 # Graph creation
@@ -166,12 +120,7 @@ dev.off()
 
 # Dataframe creation #
 
-graph_data_sd = data.frame( data = simulation_data$data)
-
-graph_data_sd = cbind(graph_data_sd, Nh_basic_sum =  Nh_basic_sum_analysis$sd)
-#graph_data_sd = cbind(graph_data_sd, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$sd)
-graph_data_sd = cbind(graph_data_sd, Nh_basic_mean =  Nh_basic_mean_analysis$sd)
-#graph_data_sd = cbind(graph_data_sd, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$sd)
+graph_data_sd = gen_graph_df(simulation_data, 'sd')
 
 
 # Graph creation
@@ -205,13 +154,7 @@ dev.off()
 
 # Dataframe creation #
 
-graph_data_median = data.frame( data = simulation_data$data)
-
-graph_data_median = cbind(graph_data_median, Nh_real =  simulation_data$Nh_real_1)
-graph_data_median = cbind(graph_data_median, Nh_basic_sum =  Nh_basic_sum_analysis$median)
-#graph_data_median = cbind(graph_data_median, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$median)
-graph_data_median = cbind(graph_data_median, Nh_basic_mean =  Nh_basic_mean_analysis$median)
-#graph_data_median = cbind(graph_data_median, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$median)
+graph_data_median = gen_graph_df(simulation_data, 'median')
 
 
 # Graph creation
@@ -238,3 +181,4 @@ ggplot(graph_data_median) +
 
 dev.off()
 
+getwd()
