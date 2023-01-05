@@ -14,8 +14,8 @@ library(stringr)
 
 setwd("~/GitHub/Coronasurveys_paper/Subpopulation memory factor/Graphs")
 
-simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_notdisjoint_sir_sw_pop1_2022.csv")
-simulation_data_disjoint = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_disjoint_sir_sw_pop1_2022.csv")
+simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_notdisjoint_uniform_sw_pop1_2022.csv")
+simulation_data_disjoint = read.csv("~/GitHub/Coronasurveys_paper/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_disjoint_uniform_sw_pop1_2022.csv")
 
   
 seed_number = '2022'
@@ -199,7 +199,6 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_mse) + 
-  
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   

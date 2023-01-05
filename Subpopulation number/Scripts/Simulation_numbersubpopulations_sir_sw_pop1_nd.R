@@ -70,7 +70,7 @@ v_pop_total = getV_pop(n_pop, Population)
 # Auxiliary simulation data
 
 # Study parameters
-parameters = round(seq(from = 1, to = 20, length.out = 10))
+parameters = round(seq(from = 2, to = 20, length.out = 10))
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)

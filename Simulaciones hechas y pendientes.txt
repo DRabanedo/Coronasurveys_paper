@@ -1,8 +1,14 @@
 Simulaciones realizadas
 * Memory factor small world SIR
 * Memory factor small world uniform
-* Network probability uniform 
+* Network probability uniform pop1
+* Network neighbors uniform pop1
 * Number subpopulations uniform small world pop1 dnd
 * Number subpopulations uniform small world pop1 nd
-* Subpopulation memory faactor SIR
-* Subpopulation memory factor Uniform
+* Subpopulation memory factor SIR pop1
+* Subpopulation memory factor Uniform pop1
+
+
+En proceso
+* Number subpopulations SIR small world pop1 dnd
+* Number subpopulations SIR small world pop1 nd
