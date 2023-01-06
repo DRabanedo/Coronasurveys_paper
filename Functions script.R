@@ -1776,7 +1776,7 @@ net_hplinks_distribution = function(net, pop){
   link_max    = max(links_hp)
   link_min    = min(links_hp)
   
-  sub_title = str_c("Mean = ", link_mean, ", median = ", link_median, ", var = ", link_var,", min = ", link_min, ", max = ", link_max, ". SIR model with beta = 0.115, gamma = 0.0767, 1 hotspot & 5 iterations. HP = ", sum(pop$hidden_population))
+  sub_title = str_c("Mean = ", link_mean, ", median = ", link_median, ", var = ", link_var,", min = ", link_min, ", max = ", link_max, ". SIR model with beta = 0.04, gamma = 0.015, 1 hotspot & 5 iterations. HP = ", sum(pop$hidden_population))
   links_graph = ggplot() + 
     geom_line(aes(x = 1:N , y = links_hp)) +
     scale_color_discrete("Legend") + 
