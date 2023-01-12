@@ -423,6 +423,6 @@ net_analysis(net_sw, Population, p, 2*nei)
 dev.off()
 
 #################### COMPUTATION TIME ANALYSIS ###########################
-# Computation time (N=10000) (virtual machine)
-#timer ->  
+# Computation time (N=10000) (virtual machine) IMDEA
+#timer ->  7.389127 days
 ###########################################################################

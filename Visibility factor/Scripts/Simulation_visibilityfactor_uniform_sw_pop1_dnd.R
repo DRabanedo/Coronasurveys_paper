@@ -58,7 +58,11 @@ net_model = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
 ## Populations ##
 # Not disjoint population #
 
+<<<<<<< HEAD
 Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model,seed = seed)
+=======
+Graph_population_matrix = gen_Data_uniform(N, v_pop_prob, hp_prob, visibility_factor, memory_factor, sub_memory_factor, net = net_model, seed = seed)
+>>>>>>> d8b8cde1840d6d37e444f33c5c735aa3c5eb51d9
 
 net_sw = Graph_population_matrix[[1]]       # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
@@ -72,7 +76,7 @@ v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
-Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_model, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
+Population_disjoint =  gen_Population_disjoint(N, net_model, v_pop_prob, Population$hidden_population, Mhp_model, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey, seed = seed)
 
 v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 ################################################################################
