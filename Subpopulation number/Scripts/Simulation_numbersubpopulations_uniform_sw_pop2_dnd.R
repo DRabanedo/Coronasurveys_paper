@@ -407,7 +407,7 @@ simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 
 ################################################################################
-file_name = str_c("Simulation_subpopulationnumber_notdisjoint_uniform_sw_pop1_", seed_sim,".csv")
+file_name = str_c("Simulation_subpopulationnumber_notdisjoint_uniform_sw_pop2_", seed_sim,".csv")
 write.csv(simulaciones,                      # Data frame
           file = file_name,                  # CSV name
           row.names = FALSE )                 # row names: TRUE or FALSE 
@@ -416,7 +416,7 @@ write.csv(simulaciones,                      # Data frame
 
 
 ################################################################################
-file_name_disjoint = str_c("Simulation_subpopulationnumber_disjoint_uniform_sw_pop1_", seed_sim,".csv")
+file_name_disjoint = str_c("Simulation_subpopulationnumber_disjoint_uniform_sw_pop2_", seed_sim,".csv")
 write.csv(simulaciones_disjoint,              # Data frame
           file = file_name_disjoint,          # CSV name
           row.names = FALSE )                  # row names: TRUE or FALSE 
@@ -428,7 +428,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_numbersubpopulations_uniform_sw_pop1_", seed, ".png")
+plot_name = str_c("Network_numbersubpopulations_uniform_sw_pop2_", seed, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)

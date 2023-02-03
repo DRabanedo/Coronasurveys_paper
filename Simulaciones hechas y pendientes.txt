@@ -6,9 +6,24 @@ Simulaciones realizadas
 * Number subpopulations uniform small world pop1 dnd
 * Number subpopulations uniform small world pop1 nd
 * Subpopulation memory factor SIR pop1
+* Subpopulation memory factor SIR pop2 (1.443124 days IbiDat)
 * Subpopulation memory factor Uniform pop1
+* Subpopulation memory factor uniform pop2 
+* Simulation_surveysize_sir_sw_pop1_dnd (7.38 días IMDEA)
+* Simulation_surveysize_uniform_sw_pop1_dnd (8.727319 dayiDat)
+* Visibility factor small worl pop1 disjoint and not disjoint y vfe (17.97713 hours IMDEA)
+* Visibility factor small worl pop1 sir disjoint and not disjoint y vfe  (18.73635 hours IbiDat)
+* Visibility factor small worl pop2 uniform disjoint and not disjoint y vfe  (1.37153 days IMDEA)
+* Visibility factor small worl pop2 sir disjoint and not disjoint y vfe  (1.786132 days IMDEA)
+* Memory factor small world pop2 uniform (25.57797 mins Ibidat)
+* Memory factor small world pop2 sir (23.87071 mins)
+* 
+* Simulation_numbersubpopulations_sir_sw_pop1_dnd (20.38952 hours IbiDat)
 
 
 En proceso
 * Number subpopulations SIR small world pop1 dnd
 * Number subpopulations SIR small world pop1 nd
+* 
+* 
+* 

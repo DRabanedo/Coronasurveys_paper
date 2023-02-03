@@ -5,7 +5,7 @@
 ######################
 # Data import
 
-setwd("C:/Users/David Rabanedo/Documents/GitHub/Coronasurveys_paper/Memory factor/Graphs")
+setwd("~/GitHub/Coronasurveys_paper/Memory factor/Graphs")
 simulation_data = read.csv("~/GitHub/Coronasurveys_paper/Memory factor/CSV/Simulations_memoryfactor_uniform_sw_2022.csv", header=T)
 
 seed_number = "207"

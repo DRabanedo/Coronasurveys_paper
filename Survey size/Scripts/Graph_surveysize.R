@@ -12,8 +12,11 @@ library(stringr)
 ######################
 # Data import
 
-simulation_data  = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Survey size/CSV/Simulation_surveysize_notdisjoint_207.csv")
-simulation_data_disjoint  =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Survey size/CSV/Simulation_surveysize_disjoint_207.csv")
+#simulation_data  = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Survey size/CSV/Simulation_surveysize_notdisjoint_207.csv")
+#simulation_data_disjoint  =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Survey size/CSV/Simulation_surveysize_disjoint_207.csv")
+simulation_data  = read.csv("~/GitHub/Coronasurveys_paper/Survey size/Simulation_surveysize_notdisjoint_sir_sw_2022.csv")
+simulation_data_disjoint  =  read.csv("~/GitHub/Coronasurveys_paper/Survey size/Simulation_surveysize_disjoint_sir_sw_2022.csv")
+
 
 seed_number = "207"
 

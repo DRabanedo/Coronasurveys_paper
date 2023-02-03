@@ -420,5 +420,5 @@ dev.off()
 
 #################### COMPUTATION TIME ANALYSIS ###########################
 # Computation time (N=10000) (virtual machine)
-#timer ->  1.112204 hours
+#timer ->  8.727319 days IbiDat
 ###########################################################################
