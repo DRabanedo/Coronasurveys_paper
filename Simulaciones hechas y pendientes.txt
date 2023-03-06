@@ -2,6 +2,7 @@ Simulaciones realizadas
 * Memory factor small world SIR
 * Memory factor small world uniform
 * Network probability uniform pop1
+* Network probability uniform pop2 (1.788 days IMDEA)
 * Network neighbors uniform pop1
 * Number subpopulations uniform small world pop1 dnd
 * Number subpopulations uniform small world pop1 nd
@@ -19,7 +20,12 @@ Simulaciones realizadas
 * Memory factor small world pop2 sir (23.87071 mins)
 * 
 * Simulation_numbersubpopulations_sir_sw_pop1_dnd (20.38952 hours IbiDat)
+* Network neighbors uniform sw pop2 (1.634845 days IbiDat)
+* Simulation_numbersubpopulations_uniform_sw_pop2_dnd (19.1236 hours IMDEA)
 
+
+* Simulation_numbersubpopulations_uniform_sw_pop2_nd (7.641648 hours IMDEA)
+* Simulation_numbersubpopulations_sir_sw_pop2_dnd (21.28384 hours IbiDat)
 
 En proceso
 * Number subpopulations SIR small world pop1 dnd
