@@ -36,7 +36,10 @@ Nh_basic_mean_dataframe = dplyr::select(simulation_data, starts_with("Nh_basic_m
 Nh_PIMLE_dataframe    = dplyr::select(simulation_data, starts_with("Nh_PIMLE_"))
 #Nh_PIMLEvis_dataframe = dplyr::select(simulation_data, starts_with("Nh_PIMLEvis_"))
 
-Nh_MLE_dataframe     = dplyr::select(simulation_data, starts_with("Nh_MLE_"))
+Nh_MLE_dataframe     = dplyr::select(simulation_data, starts_with("Nh_MLE_") & !contains("mod"))
+#Nh_MLEvis_dataframe  = dplyr::select(simulation_data, starts_with("Nh_MLEvis_"))
+
+Nh_MLE_mod_dataframe     = dplyr::select(simulation_data, starts_with("Nh_MLE_") & contains("mod"))
 #Nh_MLEvis_dataframe  = dplyr::select(simulation_data, starts_with("Nh_MLEvis_"))
 
 Nh_MoS_dataframe     = dplyr::select(simulation_data, starts_with("Nh_MoS_"))
@@ -62,6 +65,9 @@ Nh_PIMLE_analysis     = data_analysis(Nh_PIMLE_dataframe, Nh_real_dataframe)
 Nh_MLE_analysis     = data_analysis(Nh_MLE_dataframe, Nh_real_dataframe)
 #Nh_MLEvis_analysis = data_analysis(Nh_MLEvis_dataframe, Nh_real_dataframe)
 
+Nh_MLE_mod_analysis     = data_analysis(Nh_MLE_mod_dataframe, Nh_real_dataframe)
+#Nh_MLEvis_analysis = data_analysis(Nh_MLEvis_dataframe, Nh_real_dataframe)
+
 Nh_MoS_analysis     = data_analysis(Nh_MoS_dataframe, Nh_real_dataframe)
 #Nh_MoSvis_analysis = data_analysis(Nh_MoSvis_dataframe, Nh_real_dataframe)
 
@@ -85,7 +91,10 @@ Nh_basic_mean_dataframe_disjoint = dplyr::select(simulation_data_disjoint, start
 Nh_PIMLE_dataframe_disjoint    = dplyr::select(simulation_data_disjoint, starts_with("Nh_PIMLE_"))
 #Nh_PIMLEvis_dataframe_disjoint = dplyr::select(simulation_data_disjoint, starts_with("Nh_PIMLEvis_"))
 
-Nh_MLE_dataframe_disjoint     = dplyr::select(simulation_data_disjoint, starts_with("Nh_MLE_"))
+Nh_MLE_dataframe_disjoint     = dplyr::select(simulation_data_disjoint, starts_with("Nh_MLE_") & !contains("mod"))
+#Nh_MLEvis_dataframe_disjoint  = dplyr::select(simulation_data_disjoint, starts_with("Nh_MLEvis_"))
+
+Nh_MLE_mod_dataframe_disjoint     = dplyr::select(simulation_data_disjoint, starts_with("Nh_MLE_") & contains("mod"))
 #Nh_MLEvis_dataframe_disjoint  = dplyr::select(simulation_data_disjoint, starts_with("Nh_MLEvis_"))
 
 Nh_MoS_dataframe_disjoint     = dplyr::select(simulation_data_disjoint, starts_with("Nh_MoS_"))
@@ -109,6 +118,9 @@ Nh_PIMLE_analysis_disjoint     = data_analysis(Nh_PIMLE_dataframe_disjoint, Nh_r
 #Nh_PIMLEvis_analysis_disjoint = data_analysis(Nh_PIMLEvis_dataframe_disjoint, Nh_real_dataframe)
 
 Nh_MLE_analysis_disjoint     = data_analysis(Nh_MLE_dataframe_disjoint, Nh_real_dataframe)
+#Nh_MLEvis_analysis_disjoint = data_analysis(Nh_MLEvis_dataframe_disjoint, Nh_real_dataframe)
+
+Nh_MLE_mod_analysis_disjoint     = data_analysis(Nh_MLE_mod_dataframe_disjoint, Nh_real_dataframe)
 #Nh_MLEvis_analysis_disjoint = data_analysis(Nh_MLEvis_dataframe_disjoint, Nh_real_dataframe)
 
 Nh_MoS_analysis_disjoint     = data_analysis(Nh_MoS_dataframe_disjoint, Nh_real_dataframe)
@@ -144,6 +156,9 @@ graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLE =  Nh_PIMLE_analysis$a
 graph_data_abserror = cbind(graph_data_abserror, Nh_MLE =  Nh_MLE_analysis$abserror)
 #graph_data_abserror = cbind(graph_data_abserror, Nh_MLEvis =  Nh_MLEvis_analysis$abserror)
 
+graph_data_abserror = cbind(graph_data_abserror, Nh_MLE_mod =  Nh_MLE_mod_analysis$abserror)
+#graph_data_abserror = cbind(graph_data_abserror, Nh_MLEvis =  Nh_MLEvis_analysis$abserror)
+
 graph_data_abserror = cbind(graph_data_abserror, Nh_MoS =  Nh_MoS_analysis$abserror)
 #graph_data_abserror = cbind(graph_data_abserror, Nh_MoSvis =  Nh_MoSvis_analysis$abserror)
 
@@ -170,7 +185,10 @@ ggplot(graph_data_abserror) +
   geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) +
+  
+  geom_line(aes(x = data, y =  Nh_MLE_mod, col = "Nh_MLE_mod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) +
   
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
@@ -206,6 +224,9 @@ graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLE_disj
 graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLE_disjoint =  Nh_MLE_analysis_disjoint$abserror)
 #graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLEvis_disjoint =  Nh_MLEvis_analysis_disjoint$abserror)
 
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLE_mod_disjoint =  Nh_MLE_mod_analysis_disjoint$abserror)
+#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLE_mod_vis_disjoint =  Nh_MLEvis_analysis_disjoint$abserror)
+
 graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoS_disjoint =  Nh_MoS_analysis_disjoint$abserror)
 #graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoSvis_disjoint =  Nh_MoSvis_analysis_disjoint$abserror)
 
@@ -233,6 +254,9 @@ ggplot(graph_data_abserror_disjoint) +
   
   geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  
+  geom_line(aes(x = data, y =  Nh_MLE_mod_disjoint, col = "Nh_MLE_mod_disjoint")) + 
+  #geom_line(aes(x = data, y =  Nh_MLE_modvis, col = "Nh_MLEvis")) +
   
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
@@ -283,7 +307,10 @@ ggplot(graph_data_abserror_total) +
   geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
   geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) +
+  
+  geom_line(aes(x = data, y =  Nh_MLE_mod, col = "Nh_MLE_mod")) + 
+  #geom_line(aes(x = data, y =  Nh_MLE_modvis, col = "Nh_MLE_modvis")) +
   
   geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 

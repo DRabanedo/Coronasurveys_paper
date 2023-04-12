@@ -27,6 +27,18 @@ Simulaciones realizadas
 * Simulation_numbersubpopulations_uniform_sw_pop2_nd (7.641648 hours IMDEA)
 * Simulation_numbersubpopulations_sir_sw_pop2_dnd (21.28384 hours IbiDat)
 
+************************ Pa *************************************
+* Simulation_surveysize_uniform_pa_pop1_dnd (IBiDat 5.958699 days)
+* 
+
+
+* Simulation_visibilityfactor_uniform_pa_pop1_dnd (19.96071 hours IbiDat)
+***** Simulation_visibilityfactor_sir_pa_pop1_dnd (15.77583 hours IbiDat)
+
+* Simulation_subpopulationsmemoryfactor_uniform_pa_pop1_dnd (14.19208 hours IMDEA)
+
+*  memory factor pop1 pa 17.12962 mins
+
 En proceso
 * Number subpopulations SIR small world pop1 dnd
 * Number subpopulations SIR small world pop1 nd

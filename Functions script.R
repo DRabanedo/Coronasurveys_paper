@@ -191,7 +191,8 @@ gen_Reach = function(net){
   # net: network to be analysed
   
   # Net size 
-  n = net$size
+  # n = net$size
+  n = length(V(net))
   
   # Loop variables
   vect_reach = rep(NA,n)    # the degrees of each individual
@@ -1811,3 +1812,48 @@ net_analysis = function(net, pop, p, nei){
   )
   return(result_graph)
 }
+
+net_analysisv2 = function(net, pop, po=1){
+  # Double plot
+  # plot1 =  net_degree_distribution(net, p, nei)
+  degree_vect = degree(net)
+  degree_df = data.frame(degrees = degree_vect)
+  
+  # Variables of interest #
+  degree_var    = round(var(degree_vect), digits = 2)
+  degree_mean   = round(mean(degree_vect), digits = 2)
+  degree_median = median(degree_vect)
+  degree_max    = max(degree_vect)
+  degree_min    = min(degree_vect)
+  
+  # Graph representation #
+  sub_title = str_c("Mean = ", degree_mean, ", median = ", degree_median, ", var = ", degree_var,", min = ", degree_min, ", max = ", degree_max,
+                    ". Preferential attachment model with power = ", po, ".")
+  
+  plot1 = degree_graph = ggplot(degree_df) +
+    geom_histogram( aes(x = degrees, y = ..count../sum(..count..)), binwidth = 1, color = "black", fill = "grey", alpha = 0.4) +
+    labs(title = "Network degree distribution",
+         subtitle = sub_title,
+         x = "Number of neighbors",
+         y = "Proportion")
+  plot2 = net_hplinks_distribution(net, pop)
+  plt   = grid.arrange(plot1,plot2)
+  
+  #Variables analysis
+  Global_cluster_coefficent = transitivity(net, type = "global")
+  Mean_distance = mean_distance(net, weights = NULL, directed = F, unconnected = TRUE, details = FALSE)
+  Diameter = diameter(net, directed = F, unconnected = TRUE, weights = NULL)
+  Radius = radius(net, mode = "all")
+  
+  sub_title = str_c("Network parameters: Cluster coefficient = ", round(Global_cluster_coefficent, 2), ", Mean distance = ", round(Mean_distance, 2), ", Diameter = ", Diameter,", Radius = ", Radius) 
+  
+  title <- ggdraw() + 
+    draw_label(sub_title, x = 0.05, fontfamily = "bold", hjust = 0, size = 14)
+  
+  
+  result_graph = plot_grid(title, plt, ncol = 1, rel_heights = c(0.1, 1)
+  )
+  return(result_graph)
+}
+
+
